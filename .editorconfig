@@ -1,0 +1,13 @@
+[*.{kt,kts}]
+ktlint_standard_function-naming = disabled
+ktlint_standard_annotation = disabled
+ktlint_standard_no-empty-first-line-in-class-body = disabled
+#ktlint_standard_no-blank-line-before-rbrace = disabled
+#ktlint_standard_no-empty-first-line-in-method-block = disabled
+#ktlint_standard_no-unit-return = disabled
+#ktlint_standard_multiline-expression-wrapping = disabled
+#ktlint_standard_chain-method-continuation = disabled
+#ktlint_standard_function-signature = disabled
+#ij_kotlin_allow_trailing_comma = false
+#ktlint_standard_trailing-comma = disabled
+#
