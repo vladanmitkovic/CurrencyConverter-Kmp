@@ -17,7 +17,7 @@ expect fun platformModule(): Module
 
 fun initKoin(appDeclaration: KoinApplication.() -> Unit = {}) {
     startKoin {
-        modules(commonModule, platformModule())
+        modules(commonModule, platformModule(), viewModelModule)
         appDeclaration()
     }
 }

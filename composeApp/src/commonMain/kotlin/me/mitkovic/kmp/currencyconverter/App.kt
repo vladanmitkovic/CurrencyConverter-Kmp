@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
+import me.mitkovic.kmp.currencyconverter.navigation.AppNavHost
+import me.mitkovic.kmp.currencyconverter.navigation.NavigationViewModel
 import me.mitkovic.kmp.currencyconverter.platform.Platform
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -26,6 +28,13 @@ fun App() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text("platform.name: ${platform.name}")
+
+            val navViewModel: NavigationViewModel = koinInject<NavigationViewModel>()
+
+            AppNavHost(
+                currentScreen = navViewModel.currentScreen,
+                navigate = { screen -> navViewModel.navigateTo(screen) },
+            )
         }
     }
 }
