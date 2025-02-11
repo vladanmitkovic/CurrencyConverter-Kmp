@@ -1,4 +1,4 @@
-package me.mitkovic.kmp.currencyconverter
+package me.mitkovic.kmp.currencyconverter.platform
 
 import android.os.Build
 

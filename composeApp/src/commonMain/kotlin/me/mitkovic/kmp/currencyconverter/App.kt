@@ -1,37 +1,31 @@
 package me.mitkovic.kmp.currencyconverter
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
+import me.mitkovic.kmp.currencyconverter.logging.AppLogger
+import me.mitkovic.kmp.currencyconverter.platform.Platform
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import currencyconverter_kmp.composeapp.generated.resources.Res
-import currencyconverter_kmp.composeapp.generated.resources.compose_multiplatform
+import org.koin.compose.koinInject
 
 @Composable
 @Preview
 fun App() {
+    val logger: AppLogger = koinInject()
+    val platform: Platform = koinInject()
+
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
+        logger.logError("platform.name: " + platform.name, null)
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text("platform.name: ${platform.name}")
         }
     }
 }
