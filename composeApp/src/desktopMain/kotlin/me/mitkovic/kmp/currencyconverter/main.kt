@@ -3,6 +3,7 @@ package me.mitkovic.kmp.currencyconverter
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import me.mitkovic.kmp.currencyconverter.di.initKoin
+import me.mitkovic.kmp.currencyconverter.ui.App
 import org.koin.core.component.KoinComponent
 
 fun main() {
