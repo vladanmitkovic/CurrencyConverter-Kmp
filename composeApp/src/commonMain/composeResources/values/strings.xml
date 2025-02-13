@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Exchangify</string>
+    <string name="converter_favorites">Favorites</string>
+    <string name="content_description_application_icon">Application icon</string>
+    <string name="content_description_favorites_icon">Favorites icon</string>
+    <string name="content_description_back_arrow">Back arrow</string>
+    <string name="content_description_change_theme_icon">Change theme</string>
+</resources>
