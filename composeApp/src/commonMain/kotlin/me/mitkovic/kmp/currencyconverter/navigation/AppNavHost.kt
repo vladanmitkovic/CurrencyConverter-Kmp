@@ -29,6 +29,7 @@ fun AppNavHost(
             onAction(MainAction.TitleTextChanged(stringResource(Res.string.app_name)))
             onAction(MainAction.ShowActionsChanged(true))
             onAction(MainAction.ShowBackIconChanged(false))
+            onAction(MainAction.ShowReloadButtonChanged(true))
         }
         is Screen.Favorites -> {
             val favoritesViewModel: FavoritesViewModel = koinInject<FavoritesViewModel>()
@@ -40,6 +41,7 @@ fun AppNavHost(
             onAction(MainAction.TitleTextChanged(stringResource(Res.string.converter_favorites)))
             onAction(MainAction.ShowActionsChanged(false))
             onAction(MainAction.ShowBackIconChanged(true))
+            onAction(MainAction.ShowReloadButtonChanged(false))
         }
     }
 }

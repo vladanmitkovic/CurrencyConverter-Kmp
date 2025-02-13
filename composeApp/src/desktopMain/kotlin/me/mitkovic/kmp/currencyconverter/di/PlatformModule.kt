@@ -1,5 +1,7 @@
 package me.mitkovic.kmp.currencyconverter.di
 
+import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
+import me.mitkovic.kmp.currencyconverter.common.NetworkConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
@@ -14,5 +16,9 @@ actual fun platformModule() =
 
         single<LocalDataSource> {
             LocalDataSourceImpl()
+        }
+
+        single<ConnectivityObserver> {
+            NetworkConnectivityObserver()
         }
     }

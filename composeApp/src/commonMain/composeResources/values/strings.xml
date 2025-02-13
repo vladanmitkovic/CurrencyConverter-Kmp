@@ -5,4 +5,6 @@
     <string name="content_description_favorites_icon">Favorites icon</string>
     <string name="content_description_back_arrow">Back arrow</string>
     <string name="content_description_change_theme_icon">Change theme</string>
+    <string name="content_description_refresh_icon">Refresh icon</string>
+    <string name="content_description_network_status">Network Status</string>
 </resources>

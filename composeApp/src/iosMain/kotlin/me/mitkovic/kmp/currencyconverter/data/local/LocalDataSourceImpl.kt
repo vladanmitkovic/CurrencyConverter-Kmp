@@ -4,9 +4,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import platform.Foundation.NSUserDefaults
 
-class LocalDataSourceImpl : LocalDataSource {
-
-    private val defaults = NSUserDefaults.standardUserDefaults()
+class LocalDataSourceImpl(
+    private val defaults: NSUserDefaults,
+) : LocalDataSource {
 
     private val THEME_KEY = "is_dark_mode"
 
