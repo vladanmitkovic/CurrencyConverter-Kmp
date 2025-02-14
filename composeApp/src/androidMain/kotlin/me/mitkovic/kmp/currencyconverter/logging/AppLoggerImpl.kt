@@ -1,12 +1,13 @@
 package me.mitkovic.kmp.currencyconverter.logging
 
-class JvmLogger : AppLogger {
+import timber.log.Timber
 
+class AppLoggerImpl : AppLogger {
     override fun logDebug(
         message: String,
         tag: String?,
     ) {
-        println("${tag ?: "Debug"}: $message")
+        Timber.tag(tag ?: "").d(message)
     }
 
     override fun logError(
@@ -14,7 +15,6 @@ class JvmLogger : AppLogger {
         throwable: Throwable?,
         tag: String?,
     ) {
-        println("${tag ?: "Error"}: $message")
-        throwable?.printStackTrace()
+        Timber.tag(tag ?: "").e(throwable, message)
     }
 }

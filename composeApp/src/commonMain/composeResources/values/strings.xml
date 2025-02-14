@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Exchangify</string>
     <string name="converter_favorites">Favorites</string>
+    <string name="network_status_connected">Connected to the internet</string>
+    <string name="network_status_no_internet">No internet connection</string>
+    <string name="network_status_unknown">Network status unknown</string>
     <string name="content_description_application_icon">Application icon</string>
     <string name="content_description_favorites_icon">Favorites icon</string>
     <string name="content_description_back_arrow">Back arrow</string>

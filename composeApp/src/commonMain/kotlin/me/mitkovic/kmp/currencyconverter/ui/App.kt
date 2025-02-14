@@ -52,6 +52,9 @@ import currencyconverter_kmp.composeapp.generated.resources.content_description_
 import currencyconverter_kmp.composeapp.generated.resources.content_description_network_status
 import currencyconverter_kmp.composeapp.generated.resources.content_description_refresh_icon
 import currencyconverter_kmp.composeapp.generated.resources.light_off
+import currencyconverter_kmp.composeapp.generated.resources.network_status_connected
+import currencyconverter_kmp.composeapp.generated.resources.network_status_no_internet
+import currencyconverter_kmp.composeapp.generated.resources.network_status_unknown
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
@@ -97,7 +100,7 @@ fun App() {
 
     val themeValue by appViewModel.theme.collectAsStateWithLifecycle(initialValue = null)
 
-    logger.logError("themeValue: $themeValue", null)
+    logger.logError("themeValue AAA: $themeValue", null)
 
     val networkStatus by connectivityObserver.observe().collectAsState(initial = ConnectivityObserver.Status.Available)
 
@@ -135,6 +138,7 @@ fun App() {
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.FavoriteBorder,
+                                        modifier = Modifier.size(MaterialTheme.spacing.iconSize),
                                         contentDescription = stringResource(Res.string.content_description_favorites_icon),
                                         tint = MaterialTheme.colorScheme.onBackground,
                                     )
@@ -146,6 +150,7 @@ fun App() {
                                 ) {
                                     Icon(
                                         painter = painterResource(Res.drawable.light_off),
+                                        modifier = Modifier.size(MaterialTheme.spacing.iconSize),
                                         contentDescription = stringResource(Res.string.content_description_change_theme_icon),
                                         tint = MaterialTheme.colorScheme.onBackground,
                                     )
@@ -287,9 +292,9 @@ fun NetworkStatusIndicator(
                 // Network Status Icon on the right
                 val (message, networkIconColor, networkIcon) =
                     when (status?.ordinal) {
-                        0 -> Triple("Connected to internet", Color.Green, Icons.Default.CheckCircle)
-                        1 -> Triple("No internet connection", Color.Red, Icons.Default.Info)
-                        else -> Triple("Network status unknown", Color.Gray, Icons.Default.Info)
+                        0 -> Triple(stringResource(Res.string.network_status_connected), Color.Green, Icons.Default.CheckCircle)
+                        1 -> Triple(stringResource(Res.string.network_status_no_internet), Color.Red, Icons.Default.Info)
+                        else -> Triple(stringResource(Res.string.network_status_unknown), Color.Gray, Icons.Default.Info)
                     }
 
                 IconButton(

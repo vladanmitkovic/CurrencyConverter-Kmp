@@ -12,7 +12,8 @@ import platform.Network.nw_path_monitor_start
 import platform.Network.nw_path_status_satisfied
 import platform.Network.nw_path_status_unsatisfied
 
-class NetworkConnectivityObserver : ConnectivityObserver {
+class ConnectivityObserverImpl : ConnectivityObserver {
+
     override fun observe(): Flow<ConnectivityObserver.Status> =
         callbackFlow {
             val monitor = nw_path_monitor_create()

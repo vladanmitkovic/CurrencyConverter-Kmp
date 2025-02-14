@@ -10,7 +10,7 @@ import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 
 class AppViewModel(
     private val localDataSource: LocalDataSource,
-    private val logger: AppLogger,
+    logger: AppLogger,
 ) : ViewModel() {
 
     init {

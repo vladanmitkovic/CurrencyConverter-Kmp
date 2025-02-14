@@ -6,17 +6,17 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
-import me.mitkovic.kmp.currencyconverter.common.NetworkConnectivityObserver
+import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserverImpl
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
-import me.mitkovic.kmp.currencyconverter.logging.AndroidLogger
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
+import me.mitkovic.kmp.currencyconverter.logging.AppLoggerImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 actual fun platformModule() =
     module {
-        single<AppLogger> { AndroidLogger() }
+        single<AppLogger> { AppLoggerImpl() }
 
         single<DataStore<Preferences>> {
             PreferenceDataStoreFactory.create(
@@ -31,7 +31,7 @@ actual fun platformModule() =
         }
 
         single<ConnectivityObserver> {
-            NetworkConnectivityObserver(
+            ConnectivityObserverImpl(
                 context = androidContext(),
             )
         }

@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.flow
 import java.net.InetSocketAddress
 import java.net.Socket
 
-class NetworkConnectivityObserver : ConnectivityObserver {
+class ConnectivityObserverImpl : ConnectivityObserver {
+
     override fun observe(): Flow<ConnectivityObserver.Status> =
         flow {
             while (true) {

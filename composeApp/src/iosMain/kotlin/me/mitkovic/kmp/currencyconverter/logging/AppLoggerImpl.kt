@@ -2,7 +2,7 @@ package me.mitkovic.kmp.currencyconverter.logging
 
 import platform.Foundation.NSLog
 
-class IosLogger : AppLogger {
+class AppLoggerImpl : AppLogger {
 
     override fun logDebug(
         message: String,

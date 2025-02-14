@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import me.mitkovic.kmp.currencyconverter.platform.UpdateStatusBarAppearance
 
 val DarkColorScheme =
     darkColorScheme(
@@ -29,6 +30,10 @@ fun AppTheme(
     MaterialTheme(
         colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
-        content = content,
+        content = {
+            // On Android, update system UI appearance
+            UpdateStatusBarAppearance(isDarkTheme)
+            content()
+        },
     )
 }

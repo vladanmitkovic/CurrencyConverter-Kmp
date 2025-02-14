@@ -1,5 +1,6 @@
 package me.mitkovic.kmp.currencyconverter.platform
 
+import androidx.compose.runtime.Composable
 import platform.UIKit.UIDevice
 
 class IOSPlatform : Platform {
@@ -7,3 +8,7 @@ class IOSPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
+
+@Composable
+actual fun UpdateStatusBarAppearance(isDarkTheme: Boolean) {
+}
