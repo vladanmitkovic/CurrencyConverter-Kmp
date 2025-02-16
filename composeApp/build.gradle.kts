@@ -44,6 +44,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.koin.core)
             implementation(libs.koin.composeVM)
+            implementation(libs.kotlinx.coroutines.core)
         }
 
         androidMain.dependencies {
@@ -54,6 +55,9 @@ kotlin {
             implementation(libs.timber)
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.datastore.core)
+            implementation(libs.retrofit.core)
+            implementation(libs.retrofit.converter.gson)
+            implementation(libs.okhttp.logging)
         }
 
         iosMain.dependencies {
