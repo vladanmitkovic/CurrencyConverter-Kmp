@@ -1,5 +1,8 @@
 package me.mitkovic.kmp.currencyconverter.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ConversionRatesResponse(
     val result: String,
     val timestamp: Long,
