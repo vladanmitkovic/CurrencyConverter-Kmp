@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -13,7 +12,6 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -50,7 +48,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.sqldelight.runtime)
-            implementation(libs.sqldelight.coroutines)
+            api(libs.sqldelight.coroutines)
         }
 
         androidMain.dependencies {
@@ -65,7 +63,6 @@ kotlin {
             implementation(libs.retrofit.converter.gson)
             implementation(libs.okhttp.logging)
             implementation(libs.sqldelight.android.driver)
-            implementation(libs.sqldelight.coroutines)
         }
 
         iosMain.dependencies {
@@ -74,7 +71,6 @@ kotlin {
             implementation(libs.ktor.client.darwin)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.sqldelight.native.driver)
-            implementation(libs.sqldelight.coroutines)
         }
 
         desktopMain.dependencies {
@@ -85,7 +81,6 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.sqldelight.sqlite.driver)
-            implementation(libs.sqldelight.coroutines)
         }
     }
 }
