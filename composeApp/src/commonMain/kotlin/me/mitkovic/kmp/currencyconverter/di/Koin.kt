@@ -1,5 +1,6 @@
 package me.mitkovic.kmp.currencyconverter.di
 
+import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.repository.ConversionRatesRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.ConversionRatesRepositoryImpl
@@ -18,6 +19,7 @@ val commonModule =
 
         single<ConversionRatesRepository> {
             ConversionRatesRepositoryImpl(
+                localDataSource = get<LocalDataSource>(),
                 remoteDataSource = get<RemoteDataSource>(),
                 logger = get<AppLogger>(),
             )

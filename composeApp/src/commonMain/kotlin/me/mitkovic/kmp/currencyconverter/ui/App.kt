@@ -100,11 +100,11 @@ fun App() {
 
     val themeValue by appViewModel.theme.collectAsStateWithLifecycle(initialValue = null)
 
-    logger.logError("themeValue AAA: $themeValue", null)
+    logger.logError("App", "themeValue AAA: $themeValue", null)
 
     val networkStatus by connectivityObserver.observe().collectAsState(initial = ConnectivityObserver.Status.Available)
 
-    logger.logError("networkStatus: $networkStatus", null)
+    logger.logError("App", "networkStatus: $networkStatus", null)
 
     val topBarTitle = remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
@@ -120,7 +120,7 @@ fun App() {
 
     themeValue?.let { loadedTheme ->
         AppTheme(isDarkTheme = loadedTheme) {
-            logger.logError("platform.name: ${platform.name}", null)
+            logger.logError("App", "platform.name: ${platform.name}", null)
 
             Scaffold(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -194,9 +194,11 @@ fun App() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text("Platform: ${platform.name}")
+
                     AppNavHost(
                         currentScreen = navViewModel.currentScreen,
                         navigate = { screen -> navViewModel.navigateTo(screen) },
+                        { refreshTrigger.intValue },
                         onAction = { action ->
                             when (action) { // Change app title, TopAppBar actions, navi icon - depending on Converter and Favorite screen
                                 is MainAction.TitleTextChanged -> topBarTitle.value = action.title

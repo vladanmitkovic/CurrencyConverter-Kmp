@@ -1,5 +1,6 @@
 package me.mitkovic.kmp.currencyconverter.di
 
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -8,6 +9,7 @@ import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserverImpl
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
+import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
@@ -20,8 +22,31 @@ actual fun platformModule() =
             AppLoggerImpl()
         }
 
+        single {
+            JdbcSqliteDriver("jdbc:sqlite:currency_converter.db").apply {
+                CurrencyConverterDatabase.Schema.create(this)
+            }
+        }
+        single {
+            CurrencyConverterDatabase(
+                driver = get<JdbcSqliteDriver>(),
+            )
+        }
+
+        // Provide Json instance
+        single {
+            Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+            }
+        }
+
         single<LocalDataSource> {
-            LocalDataSourceImpl()
+            LocalDataSourceImpl(
+                database = get<CurrencyConverterDatabase>(),
+                json = get<Json>(),
+            )
         }
 
         single<ConnectivityObserver> {

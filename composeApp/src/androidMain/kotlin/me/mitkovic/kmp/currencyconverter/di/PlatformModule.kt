@@ -5,11 +5,15 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import kotlinx.serialization.json.Json
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserverImpl
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
+import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
 import me.mitkovic.kmp.currencyconverter.data.remote.ApiService
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSourceImpl
@@ -32,9 +36,33 @@ actual fun platformModule() =
             )
         }
 
+        single<SqlDriver> {
+            AndroidSqliteDriver(
+                CurrencyConverterDatabase.Schema,
+                context = androidContext(),
+                name = "currency_converter.db",
+            )
+        }
+
+        single<CurrencyConverterDatabase> {
+            CurrencyConverterDatabase(
+                driver = get<SqlDriver>(),
+            )
+        }
+
+        single {
+            Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+            }
+        }
+
         single<LocalDataSource> {
             LocalDataSourceImpl(
                 dataStore = get<DataStore<Preferences>>(),
+                database = get<CurrencyConverterDatabase>(),
+                json = get<Json>(),
             )
         }
 

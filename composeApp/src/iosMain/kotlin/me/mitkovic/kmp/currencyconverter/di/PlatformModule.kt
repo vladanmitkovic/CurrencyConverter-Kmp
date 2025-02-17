@@ -1,5 +1,6 @@
 package me.mitkovic.kmp.currencyconverter.di
 
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -9,6 +10,7 @@ import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserverImpl
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
+import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
@@ -26,8 +28,32 @@ actual fun platformModule() =
             NSUserDefaults.standardUserDefaults()
         }
 
+        single {
+            NativeSqliteDriver(
+                schema = CurrencyConverterDatabase.Schema,
+                name = "currency_converter.db",
+            )
+        }
+        single {
+            CurrencyConverterDatabase(
+                driver = get<NativeSqliteDriver>(),
+            )
+        }
+
+        single {
+            Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+            }
+        }
+
         single<LocalDataSource> {
-            LocalDataSourceImpl(defaults = get<NSUserDefaults>())
+            LocalDataSourceImpl(
+                defaults = get<NSUserDefaults>(),
+                database = get<CurrencyConverterDatabase>(),
+                json = get<Json>(),
+            )
         }
 
         single<ConnectivityObserver> {

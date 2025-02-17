@@ -16,6 +16,7 @@ import org.koin.compose.koinInject
 fun AppNavHost(
     currentScreen: Screen,
     navigate: (Screen) -> Unit,
+    refreshTrigger: () -> Int,
     onAction: (MainAction) -> Unit,
 ) {
     when (currentScreen) {
@@ -23,6 +24,7 @@ fun AppNavHost(
             val converterViewModel: ConverterViewModel = koinInject<ConverterViewModel>()
             ConverterScreen(
                 viewModel = converterViewModel,
+                refreshTrigger = refreshTrigger,
                 onNavigateToFavorites = { navigate(Screen.Favorites) },
             )
 

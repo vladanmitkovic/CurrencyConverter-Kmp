@@ -14,7 +14,7 @@ class AppViewModel(
 ) : ViewModel() {
 
     init {
-        logger.logError("AppViewModel", null)
+        logger.logError(AppViewModel::class.simpleName, "AppViewModel", null)
     }
 
     val theme =

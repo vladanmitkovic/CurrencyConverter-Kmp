@@ -5,16 +5,16 @@ import platform.Foundation.NSLog
 class AppLoggerImpl : AppLogger {
 
     override fun logDebug(
-        message: String,
         tag: String?,
+        message: String,
     ) {
         NSLog("${tag ?: "Debug"}: $message")
     }
 
     override fun logError(
+        tag: String?,
         message: String?,
         throwable: Throwable?,
-        tag: String?,
     ) {
         NSLog("${tag ?: "Error"}: $message")
         throwable?.printStackTrace()

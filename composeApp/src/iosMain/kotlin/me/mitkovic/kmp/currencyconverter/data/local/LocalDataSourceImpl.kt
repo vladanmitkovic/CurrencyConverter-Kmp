@@ -2,11 +2,15 @@ package me.mitkovic.kmp.currencyconverter.data.local
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.serialization.json.Json
+import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
 import platform.Foundation.NSUserDefaults
 
 class LocalDataSourceImpl(
     private val defaults: NSUserDefaults,
-) : LocalDataSource {
+    database: CurrencyConverterDatabase,
+    json: Json,
+) : SharedLocalDataSource(database, json) {
 
     private val THEME_KEY = "is_dark_mode"
 

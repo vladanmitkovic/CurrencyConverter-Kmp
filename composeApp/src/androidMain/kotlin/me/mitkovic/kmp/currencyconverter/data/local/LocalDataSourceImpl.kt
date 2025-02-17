@@ -6,10 +6,14 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
+import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
 
 class LocalDataSourceImpl(
     private val dataStore: DataStore<Preferences>,
-) : LocalDataSource {
+    database: CurrencyConverterDatabase,
+    json: Json,
+) : SharedLocalDataSource(database, json) {
 
     companion object {
         private val THEME_KEY = booleanPreferencesKey("is_dark_mode")

@@ -7,4 +7,6 @@ import me.mitkovic.kmp.currencyconverter.data.model.NetworkResult
 interface ConversionRatesRepository {
 
     fun getConversionRates(): Flow<NetworkResult<ConversionRatesResponse?>>
+
+    fun refreshConversionRates(): Flow<NetworkResult<ConversionRatesResponse?>>
 }

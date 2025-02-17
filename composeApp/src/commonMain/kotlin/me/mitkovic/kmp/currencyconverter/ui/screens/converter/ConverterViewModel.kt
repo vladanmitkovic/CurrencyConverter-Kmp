@@ -3,12 +3,14 @@ package me.mitkovic.kmp.currencyconverter.ui.screens.converter
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import me.mitkovic.kmp.currencyconverter.common.Constants.SOMETHING_WENT_WRONG
@@ -28,10 +30,13 @@ data class Rates(
     val rates: Map<String, Double>,
 )
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ConverterViewModel(
     private val repository: ConversionRatesRepository,
     private val logger: AppLogger,
 ) : ViewModel() {
+
+    private val refreshTrigger = MutableStateFlow(0)
 
     val conversionRatesUiState: StateFlow<ConversionRatesUiState> =
         repository
@@ -39,7 +44,7 @@ class ConverterViewModel(
             .onStart {
                 emit(NetworkResult.Loading)
             }.catch { e ->
-                logger.logError("Error fetching rates", e)
+                logger.logError(ConverterViewModel::class.simpleName, "Error fetching rates", e)
                 emit(NetworkResult.Error(e.message ?: SOMETHING_WENT_WRONG))
             }.map { resource ->
                 when (resource) {
@@ -65,27 +70,47 @@ class ConverterViewModel(
             )
 
     fun logMessage(message: String) {
-        logger.logError("message: $message", null)
+        logger.logError(ConverterViewModel::class.simpleName, "message: $message", null)
     }
 
-    init {
-        logger.logError("ConverterViewModel", null)
-        // loadQuotes()
-    }
-
-    fun loadQuotes() {
-        repository
-            .getConversionRates()
-            .onEach { result ->
-                when (result) {
-                    is NetworkResult.Success -> logger.logError("AAA: ${result.data}", null)
-                    is NetworkResult.Error -> {
-                        logger.logError("Error: ${result.message}", result.throwable)
+    val refreshRatesUiState: StateFlow<ConversionRatesUiState> =
+        refreshTrigger
+            .filter { trigger -> trigger > 0 }
+            .flatMapLatest {
+                repository
+                    .refreshConversionRates()
+                    .map { resource ->
+                        when (resource) {
+                            is NetworkResult.Loading -> ConversionRatesUiState(isLoading = true)
+                            is NetworkResult.Success ->
+                                ConversionRatesUiState(
+                                    isLoading = false,
+                                    rates = Rates(resource.data?.conversion_rates ?: emptyMap()),
+                                    timestamp = resource.data?.timestamp,
+                                )
+                            is NetworkResult.Error ->
+                                ConversionRatesUiState(
+                                    isLoading = false,
+                                    error = resource.message,
+                                )
+                        }
+                    }.onStart { emit(ConversionRatesUiState(isLoading = true)) }
+                    .catch { e ->
+                        emit(
+                            ConversionRatesUiState(
+                                isLoading = false,
+                                error = e.message ?: "Unknown error",
+                            ),
+                        )
                     }
-                    NetworkResult.Loading -> logger.logError("LOADING", null)
-                }
-            }.catch { e ->
-                logger.logError(e.message, e)
-            }.launchIn(viewModelScope)
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = ConversionRatesUiState(),
+            )
+
+    fun refreshConversionRates(refresh: Int) {
+        logger.logDebug(ConverterViewModel::class.simpleName, "refreshConversionRates invoked")
+        refreshTrigger.value = refresh // Increment the trigger to invoke the flow
     }
 }

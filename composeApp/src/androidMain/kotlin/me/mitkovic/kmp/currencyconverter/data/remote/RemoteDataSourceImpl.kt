@@ -21,9 +21,11 @@ class RemoteDataSourceImpl(
                     )
                 emit(NetworkResult.Success(conversionRates))
             } catch (e: Exception) {
-                logger.logError("RemoteDataSourceImpl getConversionRates error: $e", null)
-                // Don't emit error, throw to let repository handle fallback
-                throw e
+                logger.logError(
+                    RemoteDataSourceImpl::class.simpleName,
+                    "RemoteDataSourceImpl getConversionRates error: ${e.message}",
+                    e,
+                )
             }
         }
 }

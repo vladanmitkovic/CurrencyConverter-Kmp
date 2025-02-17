@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -48,6 +49,8 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
         }
 
         androidMain.dependencies {
@@ -61,6 +64,8 @@ kotlin {
             implementation(libs.retrofit.core)
             implementation(libs.retrofit.converter.gson)
             implementation(libs.okhttp.logging)
+            implementation(libs.sqldelight.android.driver)
+            implementation(libs.sqldelight.coroutines)
         }
 
         iosMain.dependencies {
@@ -68,6 +73,8 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.darwin)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.sqldelight.native.driver)
+            implementation(libs.sqldelight.coroutines)
         }
 
         desktopMain.dependencies {
@@ -77,6 +84,8 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.sqldelight.sqlite.driver)
+            implementation(libs.sqldelight.coroutines)
         }
     }
 }
@@ -133,6 +142,15 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "me.mitkovic.kmp.currencyconverter"
             packageVersion = "1.0.0"
+        }
+    }
+}
+
+// SQLDelight configuration
+sqldelight {
+    databases {
+        create("CurrencyConverterDatabase") {
+            packageName.set("me.mitkovic.kmp.currencyconverter.data.local.database")
         }
     }
 }
