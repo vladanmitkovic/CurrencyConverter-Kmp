@@ -62,6 +62,7 @@ import me.mitkovic.kmp.currencyconverter.navigation.AppNavHost
 import me.mitkovic.kmp.currencyconverter.navigation.NavigationViewModel
 import me.mitkovic.kmp.currencyconverter.navigation.Screen
 import me.mitkovic.kmp.currencyconverter.platform.Platform
+import me.mitkovic.kmp.currencyconverter.platform.platformHorizontalPadding
 import me.mitkovic.kmp.currencyconverter.ui.theme.AppTheme
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
 import org.jetbrains.compose.resources.getString
@@ -190,7 +191,8 @@ fun App() {
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(innerPadding),
+                            .padding(innerPadding)
+                            .padding(horizontal = MaterialTheme.spacing.medium),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text("Platform: ${platform.name}")
@@ -262,7 +264,7 @@ fun NetworkStatusIndicator(
                     .fillMaxWidth()
                     .height(MaterialTheme.spacing.bottomBarHeight)
                     .background(MaterialTheme.colorScheme.primary)
-                    .padding(horizontal = MaterialTheme.spacing.medium),
+                    .padding(horizontal = platformHorizontalPadding()),
         ) {
             // Row to hold icons
             Row(
@@ -273,7 +275,7 @@ fun NetworkStatusIndicator(
             ) {
                 // Reload Icon on the left
                 Box(
-                    modifier = Modifier.padding(start = MaterialTheme.spacing.medium).size(MaterialTheme.spacing.iconSize),
+                    modifier = Modifier.size(MaterialTheme.spacing.iconSize),
                 ) {
                     if (showReloadButton) {
                         IconButton(onClick = onReload) {
@@ -300,7 +302,7 @@ fun NetworkStatusIndicator(
                     }
 
                 IconButton(
-                    modifier = Modifier.padding(end = MaterialTheme.spacing.medium).size(MaterialTheme.spacing.medium),
+                    modifier = Modifier.size(MaterialTheme.spacing.medium),
                     onClick = {
                         scope.launch {
                             snackbarHostState.showSnackbar(

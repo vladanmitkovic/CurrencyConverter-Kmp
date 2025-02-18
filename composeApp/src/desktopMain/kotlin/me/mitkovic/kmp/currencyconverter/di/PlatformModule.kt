@@ -22,11 +22,20 @@ actual fun platformModule() =
             AppLoggerImpl()
         }
 
+        /*
         single {
             JdbcSqliteDriver("jdbc:sqlite:currency_converter.db").apply {
                 CurrencyConverterDatabase.Schema.create(this)
             }
         }
+         */
+
+        single<JdbcSqliteDriver> {
+            JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).apply {
+                CurrencyConverterDatabase.Schema.create(this)
+            }
+        }
+
         single {
             CurrencyConverterDatabase(
                 driver = get<JdbcSqliteDriver>(),

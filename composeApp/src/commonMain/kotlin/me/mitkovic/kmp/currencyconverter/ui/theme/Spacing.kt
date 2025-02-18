@@ -13,11 +13,11 @@ data class Spacing(
     val extraMedium: Dp = 10.dp,
     val medium: Dp = 16.dp,
     val large: Dp = 24.dp,
+    val xLarge: Dp = 32.dp,
     val iconSize: Dp = 32.dp,
     val largeItem: Dp = 36.dp,
     val bottomBarHeight: Dp = 48.dp,
     val largeButton: Dp = 56.dp,
-    val xLarge: Dp = 64.dp,
     val xxLarge: Dp = 96.dp,
     val xxxLarge: Dp = 128.dp,
 )

@@ -113,4 +113,48 @@ class ConverterViewModel(
         logger.logDebug(ConverterViewModel::class.simpleName, "refreshConversionRates invoked")
         refreshTrigger.value = refresh // Increment the trigger to invoke the flow
     }
+
+    /*
+    private val _conversionRatesUiState = MutableStateFlow(ConversionRatesUiState())
+    val conversionRatesUiState: StateFlow<ConversionRatesUiState> = _conversionRatesUiState.asStateFlow()
+
+    init {
+        logger.logError(ConverterViewModel::class.simpleName, "ConverterViewModel", null)
+        loadQuotes()
+    }
+
+    fun loadQuotes() {
+        repository
+            .getConversionRates()
+            .onEach { result ->
+                when (result) {
+                    is NetworkResult.Success -> {
+                        _conversionRatesUiState.value =
+                            ConversionRatesUiState(
+                                isLoading = false,
+                                rates = Rates(result.data?.conversion_rates ?: emptyMap()),
+                                timestamp = result.data?.timestamp,
+                                error = null,
+                            )
+                        logger.logError(ConverterViewModel::class.simpleName, "result.data: ${result.data}", null)
+                    }
+                    is NetworkResult.Error -> {
+                        logger.logError(ConverterViewModel::class.simpleName, "Error: ${result.message}", result.throwable)
+                        _conversionRatesUiState.value =
+                            ConversionRatesUiState(
+                                isLoading = false,
+                                rates = Rates(emptyMap()),
+                                error = result.message,
+                            )
+                    }
+                    NetworkResult.Loading -> {
+                        logger.logError(ConverterViewModel::class.simpleName, "LOADING", null)
+                        _conversionRatesUiState.value = ConversionRatesUiState(isLoading = true)
+                    }
+                }
+            }.catch { e ->
+                logger.logError(ConverterViewModel::class.simpleName, e.message, e)
+            }.launchIn(viewModelScope)
+    }
+     */
 }
