@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
-import me.mitkovic.kmp.currencyconverter.data.model.NetworkResult
+import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 
 class RemoteDataSourceImpl(
@@ -15,16 +15,16 @@ class RemoteDataSourceImpl(
     private val logger: AppLogger,
 ) : RemoteDataSource {
 
-    override suspend fun getConversionRates(): Flow<NetworkResult<ConversionRatesResponse>> =
+    override suspend fun getConversionRates(): Flow<Resource<ConversionRatesResponse>> =
         flow {
-            emit(NetworkResult.Loading)
+            emit(Resource.Loading)
             try {
                 val conversionRatesResponse: ConversionRatesResponse =
                     client
                         .get(
                             "${Constants.BASE_URL}/conversion_rates/example_data.json",
                         ).body()
-                emit(NetworkResult.Success(conversionRatesResponse))
+                emit(Resource.Success(conversionRatesResponse))
             } catch (e: Exception) {
                 logger.logError(
                     message = "Failed to get users: ${e.message}",

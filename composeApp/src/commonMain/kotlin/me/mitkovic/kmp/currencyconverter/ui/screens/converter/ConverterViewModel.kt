@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import me.mitkovic.kmp.currencyconverter.common.Constants.SOMETHING_WENT_WRONG
-import me.mitkovic.kmp.currencyconverter.data.model.NetworkResult
+import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.repository.ConversionRatesRepository
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 
@@ -42,26 +42,26 @@ class ConverterViewModel(
         repository
             .getConversionRates()
             .onStart {
-                emit(NetworkResult.Loading)
+                emit(Resource.Loading)
             }.catch { e ->
                 logger.logError(ConverterViewModel::class.simpleName, "Error fetching rates", e)
-                emit(NetworkResult.Error(e.message ?: SOMETHING_WENT_WRONG))
+                emit(Resource.Error(e.message ?: SOMETHING_WENT_WRONG))
             }.map { resource ->
                 when (resource) {
-                    is NetworkResult.Success ->
+                    is Resource.Success ->
                         ConversionRatesUiState(
                             isLoading = false,
                             rates = Rates(resource.data?.conversion_rates ?: emptyMap()),
                             timestamp = resource.data?.timestamp,
                             error = null,
                         )
-                    is NetworkResult.Error ->
+                    is Resource.Error ->
                         ConversionRatesUiState(
                             isLoading = false,
                             rates = Rates(emptyMap()),
                             error = resource.message,
                         )
-                    is NetworkResult.Loading -> ConversionRatesUiState(isLoading = true)
+                    is Resource.Loading -> ConversionRatesUiState(isLoading = true)
                 }
             }.stateIn(
                 scope = viewModelScope,
@@ -81,14 +81,14 @@ class ConverterViewModel(
                     .refreshConversionRates()
                     .map { resource ->
                         when (resource) {
-                            is NetworkResult.Loading -> ConversionRatesUiState(isLoading = true)
-                            is NetworkResult.Success ->
+                            is Resource.Loading -> ConversionRatesUiState(isLoading = true)
+                            is Resource.Success ->
                                 ConversionRatesUiState(
                                     isLoading = false,
                                     rates = Rates(resource.data?.conversion_rates ?: emptyMap()),
                                     timestamp = resource.data?.timestamp,
                                 )
-                            is NetworkResult.Error ->
+                            is Resource.Error ->
                                 ConversionRatesUiState(
                                     isLoading = false,
                                     error = resource.message,

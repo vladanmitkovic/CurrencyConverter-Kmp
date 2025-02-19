@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
-import me.mitkovic.kmp.currencyconverter.data.model.NetworkResult
+import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 
@@ -15,12 +15,12 @@ class ConversionRatesRepositoryImpl(
 ) : ConversionRatesRepository {
 
     // This method emits locally stored conversion rates.
-    override fun getConversionRates(): Flow<NetworkResult<ConversionRatesResponse?>> =
+    override fun getConversionRates(): Flow<Resource<ConversionRatesResponse?>> =
         flow {
             try {
                 // Collect the local data source flow and emit its values.
                 localDataSource.getConversionRates().collect { localResponse ->
-                    emit(NetworkResult.Success(localResponse))
+                    emit(Resource.Success(localResponse))
                 }
             } catch (e: Exception) {
                 logger.logError(
@@ -32,17 +32,17 @@ class ConversionRatesRepositoryImpl(
         }
 
     // This method refreshes the conversion rates from the remote source.
-    override fun refreshConversionRates(): Flow<NetworkResult<ConversionRatesResponse?>> =
+    override fun refreshConversionRates(): Flow<Resource<ConversionRatesResponse?>> =
         flow {
             try {
                 remoteDataSource.getConversionRates().collect { remoteResult ->
                     when (remoteResult) {
-                        is NetworkResult.Success -> {
+                        is Resource.Success -> {
                             // Save the successful remote data into the local database.
                             localDataSource.saveConversionRates(remoteResult.data)
-                            emit(NetworkResult.Success(remoteResult.data))
+                            emit(Resource.Success(remoteResult.data))
                         }
-                        is NetworkResult.Error -> {
+                        is Resource.Error -> {
                             logger.logError(
                                 ConversionRatesRepositoryImpl::class.simpleName,
                                 "Remote error: ${remoteResult.throwable}",
@@ -50,7 +50,7 @@ class ConversionRatesRepositoryImpl(
                             )
                             emit(remoteResult)
                         }
-                        is NetworkResult.Loading -> {
+                        is Resource.Loading -> {
                             emit(remoteResult)
                         }
                     }
