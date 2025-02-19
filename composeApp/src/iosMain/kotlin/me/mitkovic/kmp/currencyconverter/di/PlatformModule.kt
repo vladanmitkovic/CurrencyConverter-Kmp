@@ -34,6 +34,7 @@ actual fun platformModule() =
                 name = "currency_converter.db",
             )
         }
+
         single {
             CurrencyConverterDatabase(
                 driver = get<NativeSqliteDriver>(),

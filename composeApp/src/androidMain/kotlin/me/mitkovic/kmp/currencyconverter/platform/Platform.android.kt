@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.core.view.WindowCompat
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
+import java.util.Locale
 
 class AndroidPlatform : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
@@ -34,3 +35,8 @@ actual fun UpdateStatusBarAppearance(isDarkTheme: Boolean) {
 
 @Composable
 actual fun platformHorizontalPadding(): Dp = MaterialTheme.spacing.medium
+
+actual fun formatNumber(
+    value: Double,
+    decimals: Int,
+): String = String.format(Locale.US, "%.${decimals}f", value)

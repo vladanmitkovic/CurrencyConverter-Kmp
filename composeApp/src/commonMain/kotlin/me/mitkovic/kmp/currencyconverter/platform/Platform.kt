@@ -14,3 +14,8 @@ expect fun UpdateStatusBarAppearance(isDarkTheme: Boolean)
 
 @Composable
 expect fun platformHorizontalPadding(): Dp
+
+expect fun formatNumber(
+    value: Double,
+    decimals: Int = 4,
+): String

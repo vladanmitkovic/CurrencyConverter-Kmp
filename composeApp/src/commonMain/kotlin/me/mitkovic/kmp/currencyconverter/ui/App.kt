@@ -191,8 +191,7 @@ fun App() {
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(innerPadding)
-                            .padding(horizontal = MaterialTheme.spacing.medium),
+                            .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text("Platform: ${platform.name}")
