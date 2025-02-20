@@ -37,7 +37,6 @@ fun AppNavHost(
             val favoritesViewModel: FavoritesViewModel = koinInject<FavoritesViewModel>()
             FavoritesScreen(
                 viewModel = favoritesViewModel,
-                onNavigateToConverter = { navigate(Screen.Converter) },
             )
 
             onAction(MainAction.TitleTextChanged(stringResource(Res.string.converter_favorites)))

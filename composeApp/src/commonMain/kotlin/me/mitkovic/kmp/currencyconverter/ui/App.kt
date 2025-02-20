@@ -101,9 +101,7 @@ fun App() {
 
     val themeValue by appViewModel.theme.collectAsStateWithLifecycle(initialValue = null)
 
-    logger.logError("App", "themeValue AAA: $themeValue", null)
-
-    val networkStatus by connectivityObserver.observe().collectAsState(initial = ConnectivityObserver.Status.Available)
+    val networkStatus by connectivityObserver.observe().collectAsState(initial = null)
 
     logger.logError("App", "networkStatus: $networkStatus", null)
 
@@ -121,8 +119,6 @@ fun App() {
 
     themeValue?.let { loadedTheme ->
         AppTheme(isDarkTheme = loadedTheme) {
-            logger.logError("App", "platform.name: ${platform.name}", null)
-
             Scaffold(
                 containerColor = MaterialTheme.colorScheme.surface,
                 topBar = {
@@ -194,8 +190,6 @@ fun App() {
                             .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text("Platform: ${platform.name}")
-
                     AppNavHost(
                         currentScreen = navViewModel.currentScreen,
                         navigate = { screen -> navViewModel.navigateTo(screen) },

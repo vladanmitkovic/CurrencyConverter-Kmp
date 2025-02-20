@@ -95,7 +95,7 @@ fun ConverterScreen(
 
     // Use refreshTrigger to trigger refresh in the ViewModel
     LaunchedEffect(refreshTrigger()) {
-        if (refreshTrigger() >= 1) viewModel.refreshConversionRates(refreshTrigger())
+        if (refreshTrigger() >= 1) refreshConversionRates(refreshTrigger())
     }
 
     // Collect the selected currencies from the ViewModel
@@ -131,7 +131,7 @@ fun ConverterScreen(
             Column(
                 modifier =
                     Modifier
-                        .padding(horizontal = MaterialTheme.spacing.medium)
+                        .padding(MaterialTheme.spacing.medium)
                         .weight(1f, fill = true)
                         .verticalScroll(scrollState),
             ) {

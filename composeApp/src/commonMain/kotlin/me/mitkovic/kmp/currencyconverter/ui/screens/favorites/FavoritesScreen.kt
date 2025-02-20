@@ -30,10 +30,7 @@ import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FavoritesScreen(
-    viewModel: FavoritesViewModel,
-    onNavigateToConverter: () -> Unit,
-) {
+fun FavoritesScreen(viewModel: FavoritesViewModel) {
     // Collecting the favorites list as state
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()
 
