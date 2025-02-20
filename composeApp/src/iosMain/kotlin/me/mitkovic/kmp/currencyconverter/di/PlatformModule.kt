@@ -13,6 +13,8 @@ import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
 import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSourceImpl
+import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.SelectedCurrenciesDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.SelectedCurrenciesDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
@@ -65,11 +67,19 @@ actual fun platformModule() =
             )
         }
 
+        single<SelectedCurrenciesDataSource> {
+            SelectedCurrenciesDataSourceImpl(
+                defaults = get<NSUserDefaults>(),
+            )
+        }
+
         single<LocalDataSource> {
             LocalDataSourceImpl(
                 database = get<CurrencyConverterDatabase>(),
                 json = get<Json>(),
                 theme = get<ThemeDataSource>(),
+                favorites = get<FavoritesDataSource>(),
+                selectedCurrencies = get<SelectedCurrenciesDataSource>(),
             )
         }
 

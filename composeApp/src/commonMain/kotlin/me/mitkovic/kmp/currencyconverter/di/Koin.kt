@@ -8,6 +8,8 @@ import me.mitkovic.kmp.currencyconverter.data.repository.conversionrates.Convers
 import me.mitkovic.kmp.currencyconverter.data.repository.conversionrates.ConversionRatesRepositoryImpl
 import me.mitkovic.kmp.currencyconverter.data.repository.favorites.FavoritesRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.favorites.FavoritesRepositoryImpl
+import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.SelectedCurrenciesRepository
+import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.SelectedCurrenciesRepositoryImpl
 import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepositoryImpl
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
@@ -43,11 +45,18 @@ val commonModule =
             )
         }
 
+        single<SelectedCurrenciesRepository> {
+            SelectedCurrenciesRepositoryImpl(
+                localDataSource = get<LocalDataSource>(),
+            )
+        }
+
         single<CurrencyConverterRepository> {
             CurrencyConverterRepositoryImpl(
                 conversionRatesRepository = get<ConversionRatesRepository>(),
                 themeRepository = get<ThemeRepository>(),
                 favoritesRepository = get<FavoritesRepository>(),
+                selectedCurrenciesRepository = get<SelectedCurrenciesRepository>(),
             )
         }
     }

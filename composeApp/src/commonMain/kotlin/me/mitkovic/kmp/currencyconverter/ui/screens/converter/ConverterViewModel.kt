@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.common.Constants.SOMETHING_WENT_WRONG
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
@@ -129,6 +132,81 @@ class ConverterViewModel(
     fun refreshConversionRates(refresh: Int) {
         logger.logDebug(ConverterViewModel::class.simpleName, "refreshConversionRates invoked")
         refreshTrigger.value = refresh // Increment the trigger to invoke the flow
+    }
+
+    val favorites: StateFlow<List<String>> =
+        currencyConverterRepository
+            .favoritesRepository
+            .getFavoriteCurrencies()
+            .catch { e ->
+                logger.logError(ConverterViewModel::class.simpleName, "Error loading favorites", e)
+                emit(Constants.PREFERRED_FAVORITES)
+            }.onEach { favoritesList ->
+                logger.logDebug(ConverterViewModel::class.simpleName, "favoritesList: $favoritesList")
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = Constants.PREFERRED_FAVORITES,
+            )
+
+    val selectedCurrencyLeft: StateFlow<String> =
+        currencyConverterRepository
+            .selectedCurrenciesRepository
+            .getSelectedCurrencyLeft()
+            .catch { e ->
+                logger.logError(ConverterViewModel::class.simpleName, "Error loading selectedCurrencyLeft", e)
+                emit("") // Fallback
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = "",
+            )
+
+    val selectedCurrencyRight: StateFlow<String> =
+        currencyConverterRepository
+            .selectedCurrenciesRepository
+            .getSelectedCurrencyRight()
+            .catch { e ->
+                logger.logError(ConverterViewModel::class.simpleName, "Error loading selectedCurrencyRight", e)
+                emit("") // Fallback
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = "",
+            )
+
+    fun setSelectedCurrencyLeft(currency: String) {
+        viewModelScope.launch {
+            try {
+                currencyConverterRepository
+                    .selectedCurrenciesRepository
+                    .setSelectedCurrencyLeft(currency)
+                logger.logDebug(ConverterViewModel::class.simpleName, "Selected Currency Left set to: $currency")
+            } catch (e: Exception) {
+                logger.logError(ConverterViewModel::class.simpleName, "Failed to set selectedCurrencyLeft", e)
+            }
+        }
+    }
+
+    fun setSelectedCurrencyRight(currency: String) {
+        viewModelScope.launch {
+            try {
+                currencyConverterRepository
+                    .selectedCurrenciesRepository
+                    .setSelectedCurrencyRight(currency)
+                logger.logDebug(ConverterViewModel::class.simpleName, "Selected Currency Right set to: $currency")
+            } catch (e: Exception) {
+                logger.logError(ConverterViewModel::class.simpleName, "Failed to set selectedCurrencyRight", e)
+            }
+        }
+    }
+
+    fun swapCurrencies() {
+        viewModelScope.launch {
+            val temp = selectedCurrencyLeft.value
+            setSelectedCurrencyLeft(selectedCurrencyRight.value)
+            setSelectedCurrencyRight(temp)
+        }
     }
 
     /*

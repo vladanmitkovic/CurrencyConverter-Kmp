@@ -20,8 +20,8 @@ class FavoritesViewModel(
     val favorites: StateFlow<List<String>> =
         currencyConverterRepository.favoritesRepository
             .getFavoriteCurrencies()
-            .onEach { favoriteList ->
-                logger.logDebug(FavoritesViewModel::class.simpleName, "favoriteList: $favoriteList")
+            .onEach { favoritesList ->
+                logger.logDebug(FavoritesViewModel::class.simpleName, "favoritesList: $favoritesList")
             }.catch { e ->
                 logger.logError(FavoritesViewModel::class.simpleName, "Error loading favorites", e)
                 emit(emptyList())
