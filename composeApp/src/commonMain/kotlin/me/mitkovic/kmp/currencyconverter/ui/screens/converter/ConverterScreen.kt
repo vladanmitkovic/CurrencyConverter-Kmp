@@ -71,7 +71,6 @@ import org.jetbrains.compose.resources.stringResource
 fun ConverterScreen(
     viewModel: ConverterViewModel,
     refreshTrigger: () -> Int,
-    onNavigateToFavorites: () -> Unit,
 ) {
     val uiState = viewModel.conversionRatesUiState.collectAsStateWithLifecycle()
     val state = uiState.value

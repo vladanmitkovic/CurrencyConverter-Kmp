@@ -25,7 +25,6 @@ fun AppNavHost(
             ConverterScreen(
                 viewModel = converterViewModel,
                 refreshTrigger = refreshTrigger,
-                onNavigateToFavorites = { navigate(Screen.Favorites) },
             )
 
             onAction(MainAction.TitleTextChanged(stringResource(Res.string.app_name)))
