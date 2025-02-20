@@ -10,6 +10,8 @@ import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserverImpl
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
+import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
@@ -55,6 +57,10 @@ actual fun platformModule() =
 
         single<ThemeDataSource> {
             ThemeDataSourceImpl()
+        }
+
+        single<FavoritesDataSource> {
+            FavoritesDataSourceImpl()
         }
 
         single<LocalDataSource> {

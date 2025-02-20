@@ -27,6 +27,7 @@ val viewModelModule =
         }
         factory {
             FavoritesViewModel(
+                currencyConverterRepository = get<CurrencyConverterRepository>(),
                 logger = get<AppLogger>(),
             )
         }
