@@ -1,15 +1,9 @@
 package me.mitkovic.kmp.currencyconverter.data.local
 
-import kotlinx.coroutines.flow.Flow
-import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
+import me.mitkovic.kmp.currencyconverter.data.local.conversionrates.ConversionRatesDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSource
 
 interface LocalDataSource {
-
-    suspend fun saveTheme(isDarkMode: Boolean)
-
-    fun getTheme(): Flow<Boolean>
-
-    suspend fun saveConversionRates(response: ConversionRatesResponse)
-
-    fun getConversionRates(): Flow<ConversionRatesResponse?>
+    val conversionRates: ConversionRatesDataSource
+    val theme: ThemeDataSource
 }

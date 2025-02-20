@@ -1,14 +1,9 @@
-package me.mitkovic.kmp.currencyconverter.data.local
+package me.mitkovic.kmp.currencyconverter.data.local.theme
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.serialization.json.Json
-import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
 
-class LocalDataSourceImpl(
-    database: CurrencyConverterDatabase,
-    json: Json,
-) : SharedLocalDataSource(database, json) {
+class ThemeDataSourceImpl : ThemeDataSource {
 
     private val isDarkModeFlow = MutableStateFlow(false)
 

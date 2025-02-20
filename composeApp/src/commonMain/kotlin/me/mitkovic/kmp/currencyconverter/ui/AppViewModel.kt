@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
+import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 
 class AppViewModel(
-    private val localDataSource: LocalDataSource,
+    private val currencyConverterRepository: CurrencyConverterRepository,
     logger: AppLogger,
 ) : ViewModel() {
 
@@ -18,7 +18,8 @@ class AppViewModel(
     }
 
     val theme =
-        localDataSource
+        currencyConverterRepository
+            .themeRepository
             .getTheme()
             .stateIn(
                 scope = viewModelScope,
@@ -28,7 +29,8 @@ class AppViewModel(
 
     fun updateTheme(isDarkMode: Boolean) {
         viewModelScope.launch {
-            localDataSource
+            currencyConverterRepository
+                .themeRepository
                 .saveTheme(isDarkMode)
         }
     }

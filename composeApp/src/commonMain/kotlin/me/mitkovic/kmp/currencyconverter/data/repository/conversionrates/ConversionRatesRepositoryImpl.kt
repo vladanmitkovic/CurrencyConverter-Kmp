@@ -1,4 +1,4 @@
-package me.mitkovic.kmp.currencyconverter.data.repository
+package me.mitkovic.kmp.currencyconverter.data.repository.conversionrates
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,7 +19,7 @@ class ConversionRatesRepositoryImpl(
         flow {
             try {
                 // Collect the local data source flow and emit its values.
-                localDataSource.getConversionRates().collect { localResponse ->
+                localDataSource.conversionRates.getConversionRates().collect { localResponse ->
                     emit(Resource.Success(localResponse))
                 }
             } catch (e: Exception) {
@@ -28,6 +28,7 @@ class ConversionRatesRepositoryImpl(
                     "Error fetching local conversion rates: ${e.message}",
                     e,
                 )
+                throw e
             }
         }
 
@@ -39,7 +40,7 @@ class ConversionRatesRepositoryImpl(
                     when (remoteResult) {
                         is Resource.Success -> {
                             // Save the successful remote data into the local database.
-                            localDataSource.saveConversionRates(remoteResult.data)
+                            localDataSource.conversionRates.saveConversionRates(remoteResult.data)
                             emit(Resource.Success(remoteResult.data))
                         }
                         is Resource.Error -> {
@@ -61,6 +62,7 @@ class ConversionRatesRepositoryImpl(
                     "Error refreshing conversion rates: ${e.message}",
                     e,
                 )
+                throw e
             }
         }
 }

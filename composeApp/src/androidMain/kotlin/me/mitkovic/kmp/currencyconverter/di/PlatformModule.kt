@@ -14,6 +14,8 @@ import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
+import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.remote.ApiService
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSourceImpl
@@ -58,11 +60,16 @@ actual fun platformModule() =
             }
         }
 
+        single<ThemeDataSource> {
+            ThemeDataSourceImpl(
+                dataStore = get<DataStore<Preferences>>(),
+            )
+        }
         single<LocalDataSource> {
             LocalDataSourceImpl(
-                dataStore = get<DataStore<Preferences>>(),
                 database = get<CurrencyConverterDatabase>(),
                 json = get<Json>(),
+                theme = get<ThemeDataSource>(),
             )
         }
 

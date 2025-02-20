@@ -1,4 +1,4 @@
-package me.mitkovic.kmp.currencyconverter.data.local
+package me.mitkovic.kmp.currencyconverter.data.local.conversionrates
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
@@ -11,12 +11,11 @@ import kotlinx.serialization.json.Json
 import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
 import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
 
-abstract class SharedLocalDataSource(
+open class ConversionRatesDataSourceImpl(
     private val database: CurrencyConverterDatabase,
     private val json: Json,
-) : LocalDataSource {
+) : ConversionRatesDataSource {
 
-    // Conversion rates implementations (common to all platforms)
     override suspend fun saveConversionRates(response: ConversionRatesResponse) {
         val conversionRatesJson =
             json.encodeToString(
@@ -50,9 +49,4 @@ abstract class SharedLocalDataSource(
                     )
                 }
             }
-
-    // Theme persistence methods remain abstract so each platform can implement them as needed.
-    abstract override suspend fun saveTheme(isDarkMode: Boolean)
-
-    abstract override fun getTheme(): Flow<Boolean>
 }

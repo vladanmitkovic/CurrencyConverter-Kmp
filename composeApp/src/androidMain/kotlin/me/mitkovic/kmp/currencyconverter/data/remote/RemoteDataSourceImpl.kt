@@ -26,6 +26,7 @@ class RemoteDataSourceImpl(
                     "RemoteDataSourceImpl getConversionRates error: ${e.message}",
                     e,
                 )
+                throw e
             }
         }
 }

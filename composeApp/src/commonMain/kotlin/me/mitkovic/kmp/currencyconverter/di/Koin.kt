@@ -2,8 +2,12 @@ package me.mitkovic.kmp.currencyconverter.di
 
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
-import me.mitkovic.kmp.currencyconverter.data.repository.ConversionRatesRepository
-import me.mitkovic.kmp.currencyconverter.data.repository.ConversionRatesRepositoryImpl
+import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
+import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepositoryImpl
+import me.mitkovic.kmp.currencyconverter.data.repository.conversionrates.ConversionRatesRepository
+import me.mitkovic.kmp.currencyconverter.data.repository.conversionrates.ConversionRatesRepositoryImpl
+import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepository
+import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepositoryImpl
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 import me.mitkovic.kmp.currencyconverter.platform.Platform
 import me.mitkovic.kmp.currencyconverter.platform.getPlatform
@@ -22,6 +26,19 @@ val commonModule =
                 localDataSource = get<LocalDataSource>(),
                 remoteDataSource = get<RemoteDataSource>(),
                 logger = get<AppLogger>(),
+            )
+        }
+
+        single<ThemeRepository> {
+            ThemeRepositoryImpl(
+                localDataSource = get<LocalDataSource>(),
+            )
+        }
+
+        single<CurrencyConverterRepository> {
+            CurrencyConverterRepositoryImpl(
+                conversionRatesRepository = get<ConversionRatesRepository>(),
+                themeRepository = get<ThemeRepository>(),
             )
         }
     }

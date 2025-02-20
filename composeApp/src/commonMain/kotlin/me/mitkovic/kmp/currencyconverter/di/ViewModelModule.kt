@@ -1,7 +1,6 @@
 package me.mitkovic.kmp.currencyconverter.di
 
-import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
-import me.mitkovic.kmp.currencyconverter.data.repository.ConversionRatesRepository
+import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 import me.mitkovic.kmp.currencyconverter.navigation.NavigationViewModel
 import me.mitkovic.kmp.currencyconverter.ui.AppViewModel
@@ -16,13 +15,13 @@ val viewModelModule =
         }
         factory {
             AppViewModel(
-                localDataSource = get<LocalDataSource>(),
+                currencyConverterRepository = get<CurrencyConverterRepository>(),
                 logger = get<AppLogger>(),
             )
         }
         factory {
             ConverterViewModel(
-                repository = get<ConversionRatesRepository>(),
+                currencyConverterRepository = get<CurrencyConverterRepository>(),
                 logger = get<AppLogger>(),
             )
         }
