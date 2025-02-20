@@ -19,3 +19,5 @@ expect fun formatNumber(
     value: Double,
     decimals: Int = 4,
 ): String
+
+expect fun formatDateTime(dateTime: Long): String

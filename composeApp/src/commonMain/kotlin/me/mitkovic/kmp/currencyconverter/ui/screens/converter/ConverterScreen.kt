@@ -18,8 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -32,11 +33,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,11 +54,15 @@ import currencyconverter_kmp.composeapp.generated.resources.Res
 import currencyconverter_kmp.composeapp.generated.resources.content_description_swap_currencies
 import currencyconverter_kmp.composeapp.generated.resources.no_currency_detail
 import currencyconverter_kmp.composeapp.generated.resources.swap_horizontally
+import currencyconverter_kmp.composeapp.generated.resources.unknown
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.Constants
+import me.mitkovic.kmp.currencyconverter.platform.formatDateTime
 import me.mitkovic.kmp.currencyconverter.platform.formatNumber
+import me.mitkovic.kmp.currencyconverter.ui.common.StyledTextButton
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
+import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyConversionUtil
 import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyInfo
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -76,10 +83,44 @@ fun ConverterScreen(
 
     viewModel.logMessage("refreshState: " + refreshState.toString())
 
+    // Collecting the favorites list as state
+    val favorites by viewModel.favorites.collectAsStateWithLifecycle()
+    // Exclude favorite currencies from PREFERRED_CURRENCY_ORDER
+    val nonFavoriteCurrencies = Constants.PREFERRED_CURRENCY_ORDER.filterNot { it in favorites }
+    val allCurrencies = favorites + nonFavoriteCurrencies
+
+    val refreshConversionRates = viewModel::refreshConversionRates
+    // val  refreshData = viewModel::refreshData
+    val swapCurrencies = viewModel::swapCurrencies
+
     // Use refreshTrigger to trigger refresh in the ViewModel
     LaunchedEffect(refreshTrigger()) {
         if (refreshTrigger() >= 1) viewModel.refreshConversionRates(refreshTrigger())
     }
+
+    // Collect the selected currencies from the ViewModel
+    val selectedCurrencyLeft by viewModel.selectedCurrencyLeft.collectAsState(initial = "")
+    val selectedCurrencyRight by viewModel.selectedCurrencyRight.collectAsState(initial = "")
+
+    // Calculate conversion rate
+    val conversionRate =
+        CurrencyConversionUtil.getConversionRate(
+            from = selectedCurrencyLeft,
+            to = selectedCurrencyRight,
+            baseCurrency = Constants.BASE_CURRENCY,
+            ratesWrapper = state.rates,
+        )
+
+    var amountText by rememberSaveable { mutableStateOf("1") } // For the TextField input
+    // Parse the input text to a Double, defaulting to 1.0 if parsing fails
+    val amount = amountText.toDoubleOrNull() ?: 1.0
+    // Calculate converted amount based on the user input
+    val convertedAmount = amount * conversionRate
+
+    // Remember a ScrollState for the Column
+    val scrollState = rememberScrollState()
+    var firstTimeClicked by remember { mutableStateOf(false) }
+    val resetFirstTimeClicked = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -91,15 +132,63 @@ fun ConverterScreen(
                 modifier =
                     Modifier
                         .padding(horizontal = MaterialTheme.spacing.medium)
-                        .weight(1f, fill = true),
-                // .verticalScroll(scrollState),
+                        .weight(1f, fill = true)
+                        .verticalScroll(scrollState),
             ) {
-                Text(state.rates.rates.toString())
+                // Currencies Dropdown
+                CurrencySelectionRow(
+                    rates = allCurrencies,
+                    favorites = favorites,
+                    selectedCurrencyLeft = selectedCurrencyLeft,
+                    onCurrencyLeftSelected = viewModel::setSelectedCurrencyLeft,
+                    selectedCurrencyRight = selectedCurrencyRight,
+                    onCurrencyRightSelected = viewModel::setSelectedCurrencyRight,
+                    onSwapCurrencies = {
+                        swapCurrencies()
+                    },
+                )
 
-                // Replace this with your actual converter UI
-                Button(onClick = onNavigateToFavorites) {
-                    Text("Go to Favorites")
-                }
+                val ratesTimestamp = state.timestamp
+
+                // Display for the amount and its conversion
+                AmountAndConversionDisplay(
+                    ratesTimestamp = ratesTimestamp,
+                    currencyFrom = selectedCurrencyLeft,
+                    amount = amount,
+                    currencyTo = selectedCurrencyRight,
+                    convertedAmount = convertedAmount,
+                )
+
+                // Inside your ConverterScreen Composable, after AmountInputField...
+                NumericKeypad(
+                    onNumberClick = { number ->
+                        if (!firstTimeClicked) {
+                            amountText = number // Set the amountText to the clicked number
+                            firstTimeClicked = true
+
+                            // Reset firstTimeClicked after 5 seconds
+                            resetFirstTimeClicked.launch {
+                                delay(5000)
+                                firstTimeClicked = false
+                            }
+                        } else {
+                            // Append the clicked number to the current amountText
+                            amountText += number
+                        }
+                    },
+                    onDecimalClick = {
+                        // Append a decimal point if not already present
+                        if (!amountText.contains(".")) {
+                            amountText += "."
+                        }
+                    },
+                    onDeleteClick = {
+                        // Remove the last character from amountText
+                        if (amountText.isNotEmpty()) {
+                            amountText = amountText.dropLast(1)
+                        }
+                    },
+                )
             }
 
             LinearProgressIndicator(state = state, refreshState = refreshState)
@@ -112,7 +201,7 @@ fun ConverterScreen(
             // Ticker holder
             Ticker(
                 ratesWrapper = state.rates,
-                selectedCurrencyLeft = "EUR",
+                selectedCurrencyLeft = selectedCurrencyLeft,
             )
         }
     }
@@ -280,6 +369,56 @@ fun CurrencyWithFlag(currencyCode: String) {
 }
 
 @Composable
+fun AmountAndConversionDisplay(
+    ratesTimestamp: Long?,
+    currencyFrom: String,
+    amount: Double,
+    currencyTo: String,
+    convertedAmount: Double,
+) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(bottom = MaterialTheme.spacing.medium),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        // Display the amount with increased font size and bold
+        Column {
+            FullCurrencyName(currencyCode = currencyFrom)
+            Text(
+                text = amount.toString(),
+                modifier = Modifier.align(Alignment.Start),
+                style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.onBackground),
+            )
+        }
+
+        // Display the converted amount with increased font size and bold
+        Column {
+            FullCurrencyName(modifier = Modifier.align(Alignment.End), currencyCode = currencyTo)
+            Text(
+                text = formatNumber(convertedAmount, 2),
+                modifier = Modifier.align(Alignment.End),
+                style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.onBackground),
+            )
+            Text(
+                text =
+                    ratesTimestamp?.let {
+                        formatDateTime(ratesTimestamp * 1000)
+                    } ?: stringResource(
+                        Res.string.unknown,
+                    ),
+                style = MaterialTheme.typography.labelSmall,
+                modifier =
+                    Modifier
+                        .align(Alignment.End)
+                        .padding(bottom = MaterialTheme.spacing.extraSmall),
+            )
+        }
+    }
+}
+
+@Composable
 fun FullCurrencyName(
     modifier: Modifier = Modifier,
     currencyCode: String,
@@ -291,6 +430,65 @@ fun FullCurrencyName(
             modifier = modifier,
             style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
         )
+    }
+}
+
+@Composable
+fun NumericKeypad(
+    onNumberClick: (String) -> Unit,
+    onDecimalClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+) {
+    val buttons =
+        listOf(
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            ".",
+            "0",
+            "<-",
+        )
+
+    val scopeModifier =
+        Modifier
+            .padding(horizontal = MaterialTheme.spacing.small) // Add padding around the keypad
+            .fillMaxWidth() // Fill the width of its parent
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = scopeModifier) {
+        for (i in buttons.indices step 3) {
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth() // Fill the width of its parent
+                        .padding(vertical = MaterialTheme.spacing.extraSmall),
+                // Add padding between rows
+                horizontalArrangement = Arrangement.SpaceBetween, // Distribute space evenly between the buttons
+            ) {
+                for (j in i until i + 3) {
+                    StyledTextButton(
+                        buttonText = buttons[j],
+                        onClick = {
+                            when (buttons[j]) {
+                                "." -> onDecimalClick()
+                                "<-" -> onDeleteClick()
+                                else -> onNumberClick(buttons[j])
+                            }
+                        },
+                        modifier =
+                            Modifier
+                                .weight(1f) // Make each button take equal space
+                                .padding(horizontal = MaterialTheme.spacing.extraSmall) // Add padding between buttons
+                                .height(MaterialTheme.spacing.numericButton),
+                    )
+                }
+            }
+        }
     }
 }
 

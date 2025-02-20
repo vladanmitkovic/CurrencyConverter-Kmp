@@ -5,6 +5,7 @@
     <string name="network_status_no_internet">No internet connection</string>
     <string name="network_status_unknown">Network status unknown</string>
     <string name="no_currency_detail">Currency detail not found</string>
+    <string name="unknown">Unknown</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="add_to_favorites">Add to Favorites</string>

@@ -19,6 +19,7 @@ data class Spacing(
     val bottomBarHeight: Dp = 48.dp,
     val largeButton: Dp = 56.dp,
     val tickerSpeed: Dp = 60.dp,
+    val numericButton: Dp = 66.dp,
     val currencySelection: Dp = 86.dp,
     val xxLarge: Dp = 96.dp,
     val xxxLarge: Dp = 128.dp,
