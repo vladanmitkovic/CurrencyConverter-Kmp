@@ -57,11 +57,9 @@ import currencyconverter_kmp.composeapp.generated.resources.network_status_no_in
 import currencyconverter_kmp.composeapp.generated.resources.network_status_unknown
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
-import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 import me.mitkovic.kmp.currencyconverter.navigation.AppNavHost
 import me.mitkovic.kmp.currencyconverter.navigation.NavigationViewModel
 import me.mitkovic.kmp.currencyconverter.navigation.Screen
-import me.mitkovic.kmp.currencyconverter.platform.Platform
 import me.mitkovic.kmp.currencyconverter.platform.platformHorizontalPadding
 import me.mitkovic.kmp.currencyconverter.ui.theme.AppTheme
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
@@ -92,8 +90,6 @@ sealed class MainAction {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-    val logger: AppLogger = koinInject<AppLogger>()
-    val platform: Platform = koinInject<Platform>()
     val connectivityObserver: ConnectivityObserver = koinInject()
 
     val navViewModel: NavigationViewModel = koinInject<NavigationViewModel>()
@@ -102,8 +98,6 @@ fun App() {
     val themeValue by appViewModel.theme.collectAsStateWithLifecycle(initialValue = null)
 
     val networkStatus by connectivityObserver.observe().collectAsState(initial = null)
-
-    logger.logError("App", "networkStatus: $networkStatus", null)
 
     val topBarTitle = remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
@@ -192,7 +186,6 @@ fun App() {
                 ) {
                     AppNavHost(
                         currentScreen = navViewModel.currentScreen,
-                        navigate = { screen -> navViewModel.navigateTo(screen) },
                         { refreshTrigger.intValue },
                         onAction = { action ->
                             when (action) { // Change app title, TopAppBar actions, navi icon - depending on Converter and Favorite screen

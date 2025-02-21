@@ -5,6 +5,7 @@ object Constants {
     const val BASE_URL = "https://android.mitkovic.me"
     const val BASE_CURRENCY = "EUR"
     const val SOMETHING_WENT_WRONG = "Something went wrong!"
+    const val ERROR_FETCHING_CONVERSION_RATES = "Error fetching conversion rates"
 
     // Define the list of preferred favorites
     val PREFERRED_FAVORITES =

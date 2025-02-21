@@ -15,7 +15,6 @@ import org.koin.compose.koinInject
 @Composable
 fun AppNavHost(
     currentScreen: Screen,
-    navigate: (Screen) -> Unit,
     refreshTrigger: () -> Int,
     onAction: (MainAction) -> Unit,
 ) {

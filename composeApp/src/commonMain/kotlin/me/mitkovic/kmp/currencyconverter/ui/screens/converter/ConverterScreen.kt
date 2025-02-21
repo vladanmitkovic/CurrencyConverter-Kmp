@@ -75,12 +75,7 @@ fun ConverterScreen(
     val uiState = viewModel.conversionRatesUiState.collectAsStateWithLifecycle()
     val state = uiState.value
 
-    viewModel.logMessage("state: " + state.toString())
-    viewModel.logMessage("state.rates: " + state.rates)
-
     val refreshState by viewModel.refreshRatesUiState.collectAsStateWithLifecycle()
-
-    viewModel.logMessage("refreshState: " + refreshState.toString())
 
     // Collecting the favorites list as state
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()

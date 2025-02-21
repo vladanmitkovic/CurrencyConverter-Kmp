@@ -5,16 +5,19 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import me.mitkovic.kmp.currencyconverter.common.Constants
+import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 
 class AppViewModel(
     private val currencyConverterRepository: CurrencyConverterRepository,
-    logger: AppLogger,
+    private val logger: AppLogger,
 ) : ViewModel() {
 
     init {
         logger.logError(AppViewModel::class.simpleName, "AppViewModel", null)
+        fetchConversionRates()
     }
 
     val theme =
@@ -32,6 +35,30 @@ class AppViewModel(
             currencyConverterRepository
                 .themeRepository
                 .saveTheme(isDarkMode)
+        }
+    }
+
+    private fun fetchConversionRates() {
+        viewModelScope.launch {
+            currencyConverterRepository
+                .conversionRatesRepository
+                .refreshConversionRates()
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            logger.logDebug(AppViewModel::class.simpleName, "Success")
+                        }
+                        is Resource.Error -> {
+                            val errorMessage = "${Constants.ERROR_FETCHING_CONVERSION_RATES}: ${result.message}"
+                            result.message.let {
+                                logger.logError(AppViewModel::class.simpleName, errorMessage, Exception(it))
+                            }
+                        }
+                        is Resource.Loading -> {
+                            logger.logDebug(AppViewModel::class.simpleName, "Loading")
+                        }
+                    }
+                }
         }
     }
 }

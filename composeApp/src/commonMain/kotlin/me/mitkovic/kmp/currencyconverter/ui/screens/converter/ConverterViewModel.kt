@@ -77,10 +77,6 @@ class ConverterViewModel(
                 initialValue = ConversionRatesUiState(),
             )
 
-    fun logMessage(message: String) {
-        logger.logError(ConverterViewModel::class.simpleName, "message: $message", null)
-    }
-
     val refreshRatesUiState: StateFlow<ConversionRatesUiState> =
         refreshTrigger
             .filter { trigger -> trigger > 0 }
