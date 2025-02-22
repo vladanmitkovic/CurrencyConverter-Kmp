@@ -22,7 +22,7 @@ class RemoteDataSourceImpl(
                 val conversionRatesResponse: ConversionRatesResponse =
                     client
                         .get(
-                            "${Constants.BASE_URL}/conversion_rates/example_data.json",
+                            "${Constants.BASE_URL}/conversion_rates/rates_data.json",
                         ).body()
                 emit(Resource.Success(conversionRatesResponse))
             } catch (e: Exception) {
