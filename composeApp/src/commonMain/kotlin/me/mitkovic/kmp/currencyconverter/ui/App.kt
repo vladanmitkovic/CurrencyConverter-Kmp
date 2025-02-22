@@ -28,9 +28,9 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -89,21 +89,18 @@ sealed class MainAction {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-    val connectivityObserver: ConnectivityObserver = koinInject()
-
     val navViewModel: NavigationViewModel = koinInject<NavigationViewModel>()
     val appViewModel: AppViewModel = koinInject<AppViewModel>()
 
     val themeValue by appViewModel.theme.collectAsStateWithLifecycle(initialValue = null)
 
-    val networkStatus by connectivityObserver.observe().collectAsState(initial = null)
+    val connectivityObserver: ConnectivityObserver = koinInject()
+    val networkStatus by connectivityObserver.observe().collectAsStateWithLifecycle(initialValue = null)
 
     val topBarTitle = remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         topBarTitle.value = getString(Res.string.app_name)
     }
-
-    val snackbarHostState = remember { SnackbarHostState() }
 
     val showActions = remember { mutableStateOf(false) }
     val showBackIcon = remember { mutableStateOf(false) }
@@ -113,15 +110,20 @@ fun App() {
     // Callback to reset the refresh flag after processing
     val onRefreshDone = { refreshTrigger.value = false }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     themeValue?.let { loadedTheme ->
         AppTheme(isDarkTheme = loadedTheme) {
             Scaffold(
-                containerColor = MaterialTheme.colorScheme.surface,
                 topBar = {
                     TopAppBar(
                         title = {
                             ApplicationTitle(topBarTitle.value, showActions.value)
                         },
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.background,
+                            ),
                         actions = {
                             if (showActions.value) {
                                 IconButton(

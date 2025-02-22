@@ -113,7 +113,14 @@ fun ConverterScreen(
     var firstTimeClicked by remember { mutableStateOf(false) }
     val resetFirstTimeClicked = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(
+                    color = MaterialTheme.colorScheme.background,
+                ),
+    ) {
         Column(
             modifier =
                 Modifier

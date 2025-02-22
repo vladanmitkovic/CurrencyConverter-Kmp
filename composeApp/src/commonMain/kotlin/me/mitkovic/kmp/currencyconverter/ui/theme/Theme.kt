@@ -8,18 +8,20 @@ import me.mitkovic.kmp.currencyconverter.platform.UpdateStatusBarAppearance
 
 val DarkColorScheme =
     darkColorScheme(
-        primary = Purple80,
-        secondary = PurpleGrey80,
-        tertiary = Pink80,
+        primary = DarkPrimary,
+        secondary = DarkSecondary,
+        tertiary = DarkTertiary,
+        background = DarkBackground,
+        onBackground = DarkOnBackground,
     )
 
 val LightColorScheme =
     lightColorScheme(
-        primary = Purple40,
-        secondary = PurpleGrey40,
-        tertiary = Pink40,
-        background = PinkBack40,
-        onBackground = PinkText40,
+        primary = LightPrimary,
+        secondary = LightSecondary,
+        tertiary = LightTertiary,
+        background = LightBackground,
+        onBackground = LightOnBackground,
     )
 
 @Composable
