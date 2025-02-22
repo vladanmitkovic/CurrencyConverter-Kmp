@@ -26,7 +26,6 @@ actual fun UpdateStatusBarAppearance(isDarkTheme: Boolean) {
     val view = LocalView.current
     if (context is Activity) {
         DisposableEffect(isDarkTheme) {
-            // Disable the system insets fitting so content goes edge-to-edge.
             WindowCompat.setDecorFitsSystemWindows(context.window, false)
             // Update status bar icon appearance based on theme.
             WindowCompat.getInsetsController(context.window, view).isAppearanceLightStatusBars = !isDarkTheme

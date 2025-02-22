@@ -32,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -109,7 +108,10 @@ fun App() {
     val showActions = remember { mutableStateOf(false) }
     val showBackIcon = remember { mutableStateOf(false) }
     val showReloadButton = remember { mutableStateOf(false) }
-    val refreshTrigger = remember { mutableIntStateOf(0) }
+
+    val refreshTrigger = remember { mutableStateOf(false) }
+    // Callback to reset the refresh flag after processing
+    val onRefreshDone = { refreshTrigger.value = false }
 
     themeValue?.let { loadedTheme ->
         AppTheme(isDarkTheme = loadedTheme) {
@@ -172,7 +174,7 @@ fun App() {
                         snackbarHostState = snackbarHostState,
                         showReloadButton = showReloadButton.value,
                     ) {
-                        refreshTrigger.intValue++
+                        refreshTrigger.value = true
                     }
                 },
                 snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -186,7 +188,8 @@ fun App() {
                 ) {
                     AppNavHost(
                         currentScreen = navViewModel.currentScreen,
-                        { refreshTrigger.intValue },
+                        refreshTrigger = { refreshTrigger.value },
+                        onRefreshDone = onRefreshDone,
                         onAction = { action ->
                             when (action) { // Change app title, TopAppBar actions, navi icon - depending on Converter and Favorite screen
                                 is MainAction.TitleTextChanged -> topBarTitle.value = action.title

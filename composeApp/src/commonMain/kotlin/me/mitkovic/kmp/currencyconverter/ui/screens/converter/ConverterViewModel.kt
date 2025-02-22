@@ -39,7 +39,7 @@ class ConverterViewModel(
     private val logger: AppLogger,
 ) : ViewModel() {
 
-    private val refreshTrigger = MutableStateFlow(0)
+    private val refreshTrigger = MutableStateFlow(false)
 
     val conversionRatesUiState: StateFlow<ConversionRatesUiState> =
         currencyConverterRepository
@@ -79,7 +79,7 @@ class ConverterViewModel(
 
     val refreshRatesUiState: StateFlow<ConversionRatesUiState> =
         refreshTrigger
-            .filter { trigger -> trigger > 0 }
+            .filter { trigger -> trigger }
             .flatMapLatest {
                 currencyConverterRepository
                     .conversionRatesRepository
@@ -125,7 +125,7 @@ class ConverterViewModel(
                 initialValue = ConversionRatesUiState(),
             )
 
-    fun refreshConversionRates(refresh: Int) {
+    fun refreshConversionRates(refresh: Boolean) {
         logger.logDebug(ConverterViewModel::class.simpleName, "refreshConversionRates invoked")
         refreshTrigger.value = refresh // Increment the trigger to invoke the flow
     }

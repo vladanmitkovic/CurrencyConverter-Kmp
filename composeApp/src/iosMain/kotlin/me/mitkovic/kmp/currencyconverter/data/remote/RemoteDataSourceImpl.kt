@@ -31,7 +31,6 @@ class RemoteDataSourceImpl(
                     throwable = e,
                     tag = "API",
                 )
-                // Don't emit error, let repository handle fallback
                 throw e
             }
         }

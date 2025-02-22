@@ -15,7 +15,8 @@ import org.koin.compose.koinInject
 @Composable
 fun AppNavHost(
     currentScreen: Screen,
-    refreshTrigger: () -> Int,
+    refreshTrigger: () -> Boolean,
+    onRefreshDone: () -> Unit,
     onAction: (MainAction) -> Unit,
 ) {
     when (currentScreen) {
@@ -24,6 +25,7 @@ fun AppNavHost(
             ConverterScreen(
                 viewModel = converterViewModel,
                 refreshTrigger = refreshTrigger,
+                onRefreshDone = onRefreshDone,
             )
 
             onAction(MainAction.TitleTextChanged(stringResource(Res.string.app_name)))

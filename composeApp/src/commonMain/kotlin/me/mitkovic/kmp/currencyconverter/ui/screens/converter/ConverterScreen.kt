@@ -70,26 +70,23 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ConverterScreen(
     viewModel: ConverterViewModel,
-    refreshTrigger: () -> Int,
+    refreshTrigger: () -> Boolean,
+    onRefreshDone: () -> Unit,
 ) {
     val uiState = viewModel.conversionRatesUiState.collectAsStateWithLifecycle()
     val state = uiState.value
 
     val refreshState by viewModel.refreshRatesUiState.collectAsStateWithLifecycle()
 
-    // Collecting the favorites list as state
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()
-    // Exclude favorite currencies from PREFERRED_CURRENCY_ORDER
     val nonFavoriteCurrencies = Constants.PREFERRED_CURRENCY_ORDER.filterNot { it in favorites }
-    val allCurrencies = favorites + nonFavoriteCurrencies
 
-    val refreshConversionRates = viewModel::refreshConversionRates
-    // val  refreshData = viewModel::refreshData
-    val swapCurrencies = viewModel::swapCurrencies
+    val allCurrencies = favorites + nonFavoriteCurrencies
 
     // Use refreshTrigger to trigger refresh in the ViewModel
     LaunchedEffect(refreshTrigger()) {
-        if (refreshTrigger() >= 1) refreshConversionRates(refreshTrigger())
+        viewModel.refreshConversionRates(refreshTrigger())
+        onRefreshDone()
     }
 
     // Collect the selected currencies from the ViewModel
@@ -134,11 +131,15 @@ fun ConverterScreen(
                     rates = allCurrencies,
                     favorites = favorites,
                     selectedCurrencyLeft = selectedCurrencyLeft,
-                    onCurrencyLeftSelected = viewModel::setSelectedCurrencyLeft,
+                    onCurrencyLeftSelected = { currency ->
+                        viewModel.setSelectedCurrencyLeft(currency)
+                    },
                     selectedCurrencyRight = selectedCurrencyRight,
-                    onCurrencyRightSelected = viewModel::setSelectedCurrencyRight,
+                    onCurrencyRightSelected = { currency ->
+                        viewModel.setSelectedCurrencyRight(currency)
+                    },
                     onSwapCurrencies = {
-                        swapCurrencies()
+                        viewModel.swapCurrencies()
                     },
                 )
 
@@ -185,7 +186,7 @@ fun ConverterScreen(
                 )
             }
 
-            LinearProgressIndicator(state = state, refreshState = refreshState)
+            LinearProgressIndicator(refreshState = refreshState)
 
             HorizontalDivider(
                 thickness = 1.dp,
@@ -540,15 +541,12 @@ fun Ticker(
 }
 
 @Composable
-fun LinearProgressIndicator(
-    state: ConversionRatesUiState,
-    refreshState: ConversionRatesUiState,
-) {
+fun LinearProgressIndicator(refreshState: ConversionRatesUiState) {
     var currentProgress by remember { mutableFloatStateOf(0f) }
     var loading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    if ((state.isLoading || refreshState.isLoading) && !loading) {
+    if ((refreshState.isLoading) && !loading) {
         loading = true
         LaunchedEffect(Unit) {
             scope.launch {
