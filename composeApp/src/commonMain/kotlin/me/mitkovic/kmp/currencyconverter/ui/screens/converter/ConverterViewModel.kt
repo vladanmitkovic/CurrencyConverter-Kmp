@@ -127,7 +127,7 @@ class ConverterViewModel(
 
     fun refreshConversionRates(refresh: Boolean) {
         logger.logDebug(ConverterViewModel::class.simpleName, "refreshConversionRates invoked")
-        refreshTrigger.value = refresh // Increment the trigger to invoke the flow
+        refreshTrigger.value = refresh // Update the trigger to invoke the flow
     }
 
     val favorites: StateFlow<List<String>> =
@@ -151,7 +151,6 @@ class ConverterViewModel(
             .getSelectedCurrencyLeft()
             .catch { e ->
                 logger.logError(ConverterViewModel::class.simpleName, "Error loading selectedCurrencyLeft", e)
-                emit("") // Fallback
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
@@ -164,7 +163,6 @@ class ConverterViewModel(
             .getSelectedCurrencyRight()
             .catch { e ->
                 logger.logError(ConverterViewModel::class.simpleName, "Error loading selectedCurrencyRight", e)
-                emit("") // Fallback
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),

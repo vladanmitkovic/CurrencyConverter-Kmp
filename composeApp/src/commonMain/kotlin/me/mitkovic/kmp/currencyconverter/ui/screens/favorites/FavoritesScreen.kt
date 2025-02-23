@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import currencyconverter_kmp.composeapp.generated.resources.Res
@@ -59,7 +60,13 @@ fun FavoritesScreen(viewModel: FavoritesViewModel) {
                 Text(
                     text = stringResource(Res.string.your_favorites),
                     modifier = Modifier.padding(spacing.medium),
-                    style = MaterialTheme.typography.bodySmall,
+                    style =
+                        MaterialTheme
+                            .typography
+                            .bodySmall
+                            .copy(
+                                fontWeight = FontWeight.Bold,
+                            ),
                 )
             }
             items(favorites) { currency ->
@@ -67,7 +74,9 @@ fun FavoritesScreen(viewModel: FavoritesViewModel) {
                 CurrencyItem(
                     currency = currency,
                     action = stringResource(Res.string.remove),
-                    onAddRemoveAction = { favorite -> viewModel.removeFavorite(favorite) },
+                    onAddRemoveAction = { favorite ->
+                        viewModel.removeFavorite(favorite)
+                    },
                 )
                 HorizontalDivider(
                     thickness = 1.dp,
@@ -83,7 +92,13 @@ fun FavoritesScreen(viewModel: FavoritesViewModel) {
                 Text(
                     text = stringResource(Res.string.add_to_favorites),
                     modifier = Modifier.padding(spacing.medium),
-                    style = MaterialTheme.typography.bodySmall,
+                    style =
+                        MaterialTheme
+                            .typography
+                            .bodySmall
+                            .copy(
+                                fontWeight = FontWeight.Bold,
+                            ),
                 )
             }
 
@@ -93,7 +108,9 @@ fun FavoritesScreen(viewModel: FavoritesViewModel) {
                 CurrencyItem(
                     currency = currency,
                     action = stringResource(Res.string.add),
-                    onAddRemoveAction = { favorite -> viewModel.addFavorite(favorite) },
+                    onAddRemoveAction = { favorite ->
+                        viewModel.addFavorite(favorite)
+                    },
                 )
                 HorizontalDivider(
                     thickness = 1.dp,

@@ -79,13 +79,18 @@ fun ConverterScreen(
     val refreshState by viewModel.refreshRatesUiState.collectAsStateWithLifecycle()
 
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()
-    val nonFavoriteCurrencies = Constants.PREFERRED_CURRENCY_ORDER.filterNot { it in favorites }
+    val nonFavoriteCurrencies =
+        Constants.PREFERRED_CURRENCY_ORDER.filterNot {
+            it in favorites
+        }
 
     val allCurrencies = favorites + nonFavoriteCurrencies
 
     // Use refreshTrigger to trigger refresh in the ViewModel
     LaunchedEffect(refreshTrigger()) {
-        viewModel.refreshConversionRates(refreshTrigger())
+        viewModel.refreshConversionRates(
+            refreshTrigger(),
+        )
         onRefreshDone()
     }
 
@@ -102,7 +107,7 @@ fun ConverterScreen(
             ratesWrapper = state.rates,
         )
 
-    var amountText by rememberSaveable { mutableStateOf("1") } // For the TextField input
+    var amountText by rememberSaveable { mutableStateOf("1") }
     // Parse the input text to a Double, defaulting to 1.0 if parsing fails
     val amount = amountText.toDoubleOrNull() ?: 1.0
     // Calculate converted amount based on the user input
@@ -193,7 +198,7 @@ fun ConverterScreen(
                 )
             }
 
-            LinearProgressIndicator(refreshState = refreshState)
+            ProgressIndicator(refreshState = refreshState)
 
             HorizontalDivider(
                 thickness = 1.dp,
@@ -217,7 +222,7 @@ fun CurrencySelectionRow(
     onCurrencyLeftSelected: (String) -> Unit,
     selectedCurrencyRight: String,
     onCurrencyRightSelected: (String) -> Unit,
-    onSwapCurrencies: () -> Unit, // Add an action to swap currencies
+    onSwapCurrencies: () -> Unit,
 ) {
     Row(
         modifier =
@@ -261,7 +266,7 @@ fun CurrencySelectionRow(
 fun CurrencySelectionDropdown(
     selectedCurrency: String,
     currencies: List<String>,
-    favorites: List<String>, // Added this to differentiate between favorites and others
+    favorites: List<String>,
     onCurrencySelected: (String) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -367,7 +372,10 @@ fun CurrencyWithFlag(currencyCode: String) {
                 color = MaterialTheme.colorScheme.onPrimary, // Ensuring text color is onPrimary
             )
         }
-    } ?: Text(stringResource(Res.string.no_currency_detail), color = MaterialTheme.colorScheme.onPrimary) // Fallback text
+    } ?: Text(
+        text = stringResource(Res.string.no_currency_detail),
+        color = MaterialTheme.colorScheme.onPrimary,
+    )
 }
 
 @Composable
@@ -391,7 +399,13 @@ fun AmountAndConversionDisplay(
             Text(
                 text = amount.toString(),
                 modifier = Modifier.align(Alignment.Start),
-                style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.onBackground),
+                style =
+                    MaterialTheme
+                        .typography
+                        .headlineLarge
+                        .copy(
+                            color = MaterialTheme.colorScheme.onBackground,
+                        ),
             )
         }
 
@@ -401,7 +415,13 @@ fun AmountAndConversionDisplay(
             Text(
                 text = formatNumber(convertedAmount, 2),
                 modifier = Modifier.align(Alignment.End),
-                style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.onBackground),
+                style =
+                    MaterialTheme
+                        .typography
+                        .headlineLarge
+                        .copy(
+                            color = MaterialTheme.colorScheme.onBackground,
+                        ),
             )
             Text(
                 text =
@@ -430,7 +450,13 @@ fun FullCurrencyName(
         Text(
             text = detail.fullName,
             modifier = modifier,
-            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onBackground),
+            style =
+                MaterialTheme
+                    .typography
+                    .bodySmall
+                    .copy(
+                        color = MaterialTheme.colorScheme.onBackground,
+                    ),
         )
     }
 }
@@ -548,7 +574,7 @@ fun Ticker(
 }
 
 @Composable
-fun LinearProgressIndicator(refreshState: ConversionRatesUiState) {
+fun ProgressIndicator(refreshState: ConversionRatesUiState) {
     var currentProgress by remember { mutableFloatStateOf(0f) }
     var loading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
