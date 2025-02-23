@@ -113,7 +113,7 @@ fun App() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     themeValue?.let { loadedTheme ->
-        AppTheme(isDarkTheme = loadedTheme) {
+        AppTheme(isLightTheme = loadedTheme) {
             Scaffold(
                 topBar = {
                     TopAppBar(

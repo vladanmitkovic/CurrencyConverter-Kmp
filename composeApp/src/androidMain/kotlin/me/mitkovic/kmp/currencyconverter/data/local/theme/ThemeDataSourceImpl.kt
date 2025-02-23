@@ -12,12 +12,12 @@ class ThemeDataSourceImpl(
 ) : ThemeDataSource {
 
     companion object {
-        private val THEME_KEY = booleanPreferencesKey("is_dark_mode")
+        private val THEME_KEY = booleanPreferencesKey("is_light_mode")
     }
 
-    override suspend fun saveTheme(isDarkMode: Boolean) {
+    override suspend fun saveTheme(isLightMode: Boolean) {
         dataStore.edit { preferences ->
-            preferences[THEME_KEY] = isDarkMode
+            preferences[THEME_KEY] = isLightMode
         }
     }
 

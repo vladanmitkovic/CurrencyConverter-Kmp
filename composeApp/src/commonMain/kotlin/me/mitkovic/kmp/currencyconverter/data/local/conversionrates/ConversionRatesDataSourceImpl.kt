@@ -23,7 +23,6 @@ open class ConversionRatesDataSourceImpl(
                 response.conversion_rates,
             )
         database.currencyConverterDatabaseQueries.insertConversionRates(
-            result = response.result,
             timestamp = response.timestamp,
             conversion_rates = conversionRatesJson,
         )
@@ -37,7 +36,6 @@ open class ConversionRatesDataSourceImpl(
             .map { list ->
                 list.firstOrNull()?.let { row ->
                     ConversionRatesResponse(
-                        result = row.result,
                         timestamp = row.timestamp,
                         conversion_rates =
                             json.decodeFromString(

@@ -9,12 +9,12 @@ class ThemeDataSourceImpl(
 ) : ThemeDataSource {
 
     private val THEME_KEY = "is_dark_mode"
-    private val isDarkModeFlow = MutableStateFlow(defaults.boolForKey(THEME_KEY))
+    private val isLightModeFlow = MutableStateFlow(defaults.boolForKey(THEME_KEY))
 
-    override suspend fun saveTheme(isDarkMode: Boolean) {
-        defaults.setBool(isDarkMode, forKey = THEME_KEY)
-        isDarkModeFlow.value = isDarkMode
+    override suspend fun saveTheme(isLightMode: Boolean) {
+        defaults.setBool(isLightMode, forKey = THEME_KEY)
+        isLightModeFlow.value = isLightMode
     }
 
-    override fun getTheme(): Flow<Boolean> = isDarkModeFlow
+    override fun getTheme(): Flow<Boolean> = isLightModeFlow
 }

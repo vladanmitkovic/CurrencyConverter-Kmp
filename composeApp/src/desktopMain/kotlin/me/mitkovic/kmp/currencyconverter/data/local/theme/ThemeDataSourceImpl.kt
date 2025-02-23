@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class ThemeDataSourceImpl : ThemeDataSource {
 
-    private val isDarkModeFlow = MutableStateFlow(false)
+    private val isLightModeFlow = MutableStateFlow(false)
 
-    override suspend fun saveTheme(isDarkMode: Boolean) {
-        isDarkModeFlow.value = isDarkMode
+    override suspend fun saveTheme(isLightMode: Boolean) {
+        isLightModeFlow.value = isLightMode
     }
 
-    override fun getTheme(): Flow<Boolean> = isDarkModeFlow
+    override fun getTheme(): Flow<Boolean> = isLightModeFlow
 }

@@ -1,13 +1,12 @@
 CREATE TABLE ConversionRatesEntity (
     id INTEGER NOT NULL PRIMARY KEY,
-    result TEXT NOT NULL,
     timestamp INTEGER NOT NULL,
     conversion_rates TEXT NOT NULL
 );
 
 insertConversionRates:
-INSERT OR REPLACE INTO ConversionRatesEntity (id, result, timestamp, conversion_rates)
-VALUES (1, ?, ?, ?);
+INSERT OR REPLACE INTO ConversionRatesEntity (id, timestamp, conversion_rates)
+VALUES (1, ?, ?);
 
 getConversionRates:
 SELECT * FROM ConversionRatesEntity WHERE id = 1;

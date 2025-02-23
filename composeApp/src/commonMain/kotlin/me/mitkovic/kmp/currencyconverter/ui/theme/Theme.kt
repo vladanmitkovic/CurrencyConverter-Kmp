@@ -26,15 +26,15 @@ val LightColorScheme =
 
 @Composable
 fun AppTheme(
-    isDarkTheme: Boolean,
+    isLightTheme: Boolean,
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme,
+        colorScheme = if (isLightTheme) LightColorScheme else DarkColorScheme,
         typography = Typography,
         content = {
             // On Android, update system UI appearance
-            UpdateStatusBarAppearance(isDarkTheme)
+            UpdateStatusBarAppearance(!isLightTheme)
             content()
         },
     )

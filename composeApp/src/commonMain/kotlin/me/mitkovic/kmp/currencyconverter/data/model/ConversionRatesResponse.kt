@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ConversionRatesResponse(
-    val result: String,
     val timestamp: Long,
     val conversion_rates: Map<String, Double>,
 )
