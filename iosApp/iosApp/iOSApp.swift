@@ -2,7 +2,7 @@ import SwiftUI
 import ComposeApp
 
 @main
-struct iOSApp: App {
+struct iOSApp: App { 
     
     init() {
         do {
