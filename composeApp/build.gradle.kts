@@ -138,7 +138,6 @@ compose.desktop {
             packageName = "me.mitkovic.kmp.currencyconverter"
             packageVersion = "1.0.0"
 
-            // Instruct jlink to include java.sql
             modules("java.sql")
         }
     }
