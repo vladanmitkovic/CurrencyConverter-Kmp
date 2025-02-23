@@ -579,7 +579,7 @@ fun ProgressIndicator(refreshState: ConversionRatesUiState) {
     var loading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    if ((refreshState.isLoading) && !loading) {
+    if (refreshState.isLoading && !loading) {
         loading = true
         LaunchedEffect(Unit) {
             scope.launch {
