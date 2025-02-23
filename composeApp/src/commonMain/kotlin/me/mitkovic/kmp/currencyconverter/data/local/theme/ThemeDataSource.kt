@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ThemeDataSource {
 
-    suspend fun saveTheme(isDarkMode: Boolean)
+    suspend fun saveTheme(isLightMode: Boolean)
 
     fun getTheme(): Flow<Boolean>
 }
