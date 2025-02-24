@@ -1,11 +1,11 @@
 CREATE TABLE ConversionRatesEntity (
     id INTEGER NOT NULL PRIMARY KEY,
     timestamp INTEGER NOT NULL,
-    conversion_rates TEXT NOT NULL
+    rates TEXT NOT NULL
 );
 
 insertConversionRates:
-INSERT OR REPLACE INTO ConversionRatesEntity (id, timestamp, conversion_rates)
+INSERT OR REPLACE INTO ConversionRatesEntity (id, timestamp, rates)
 VALUES (1, ?, ?);
 
 getConversionRates:

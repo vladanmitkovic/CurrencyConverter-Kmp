@@ -24,7 +24,7 @@ open class ConversionRatesDataSourceImpl(
             )
         database.currencyConverterDatabaseQueries.insertConversionRates(
             timestamp = response.timestamp,
-            conversion_rates = conversionRatesJson,
+            rates = conversionRatesJson,
         )
     }
 
@@ -40,7 +40,7 @@ open class ConversionRatesDataSourceImpl(
                         conversion_rates =
                             json.decodeFromString(
                                 MapSerializer(String.serializer(), Double.serializer()),
-                                row.conversion_rates,
+                                row.rates,
                             ),
                     )
                 }

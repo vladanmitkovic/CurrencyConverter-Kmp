@@ -6,7 +6,7 @@ import me.mitkovic.kmp.currencyconverter.common.Constants
 
 class FavoritesDataSourceImpl : FavoritesDataSource {
 
-    private val favoritesFlow = MutableStateFlow<List<String>>(Constants.PREFERRED_FAVORITES)
+    private val favoritesFlow = MutableStateFlow(Constants.PREFERRED_FAVORITES)
 
     override fun getFavoriteCurrencies(): Flow<List<String>> = favoritesFlow
 
