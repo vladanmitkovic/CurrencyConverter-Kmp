@@ -1,6 +1,11 @@
 # Exchangify - Currency Converter - KMP
 
-Exchangify - Currency Converter - KMP is a simple yet powerful currency converter app designed to help you convert currencies effortlessly. The app uses real-time exchange rates to provide accurate conversions between a wide range of world currencies.
+**Exchangify** - Currency Converter - KMP is a **Kotlin Multiplatform** project targeting Android, iOS and Desktop, built with Compose Multiplatform, Coroutines, Flow, Koin, Retrofit, Ktor, SqlDelight, DataStore, NSUserDefaults and Material3 based on MVVM architecture.
+
+<img src="previews/Exchangify.png" alt="App screenshot" style="max-width: 100%;">
+
+It is a simple yet powerful currency converter app designed to help you convert currencies effortlessly. The app uses real-time exchange rates to provide accurate conversions between a wide range of world currencies.
+
 
 ## Features
 
@@ -33,7 +38,7 @@ Select the currency you want to convert from, enter the amount, and select the c
 
 This is a **Kotlin Multiplatform** project targeting Android, iOS and Desktop.
 
-Exchangify - Currency Converter - KMP is built using a modern stack of technologies designed to offer robust performance and scalability:
+**Exchangify** - Currency Converter - KMP is built using a modern stack of technologies designed to offer robust performance and scalability:
 - **Compose Multiplatform**: For building native UIs.
 - **Retrofit**: For Android network operations.
 - **Ktor**: For iOS and Desktop network operations.
@@ -46,7 +51,7 @@ Exchangify - Currency Converter - KMP is built using a modern stack of technolog
 
 ## Architecture
 
-Exchangify - Currency Converter - KMP follows the [Google's official architecture guidance](https://developer.android.com/topic/architecture).
+**Exchangify** - Currency Converter - KMP follows the [Google's official architecture guidance](https://developer.android.com/topic/architecture).
 <br/><br/>
 <img src="previews/Exchengify_1_Architecture.png" alt="Architecture 1">
 <br/><br/>
