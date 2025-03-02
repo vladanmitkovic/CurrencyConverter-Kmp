@@ -28,7 +28,7 @@ class ConversionRatesRepositoryImpl(
                     "Error fetching local conversion rates: ${e.message}",
                     e,
                 )
-                throw e
+                emit(Resource.Error(e.message ?: "Error fetching local conversion rates"))
             }
         }
 
@@ -62,7 +62,7 @@ class ConversionRatesRepositoryImpl(
                     "Error refreshing conversion rates: ${e.message}",
                     e,
                 )
-                throw e
+                emit(Resource.Error(e.message ?: "Error refreshing conversion rates"))
             }
         }
 }
