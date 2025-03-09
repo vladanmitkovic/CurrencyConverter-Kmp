@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.rememberNavController
 import currencyconverter_kmp.composeapp.generated.resources.Res
 import currencyconverter_kmp.composeapp.generated.resources.app_icon
 import currencyconverter_kmp.composeapp.generated.resources.app_name
@@ -57,7 +58,6 @@ import currencyconverter_kmp.composeapp.generated.resources.network_status_unkno
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.navigation.AppNavHost
-import me.mitkovic.kmp.currencyconverter.navigation.NavigationViewModel
 import me.mitkovic.kmp.currencyconverter.navigation.Screen
 import me.mitkovic.kmp.currencyconverter.platform.platformHorizontalPadding
 import me.mitkovic.kmp.currencyconverter.ui.theme.AppTheme
@@ -89,7 +89,7 @@ sealed class MainAction {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-    val navViewModel: NavigationViewModel = koinInject<NavigationViewModel>()
+    val navController = rememberNavController()
     val appViewModel: AppViewModel = koinInject<AppViewModel>()
 
     val themeValue by appViewModel.theme.collectAsStateWithLifecycle(initialValue = null)
@@ -128,7 +128,9 @@ fun App() {
                             if (showActions.value) {
                                 IconButton(
                                     onClick = {
-                                        navViewModel.navigateTo(Screen.Favorites)
+                                        navController.navigate(
+                                            Screen.Favorites,
+                                        )
                                     },
                                 ) {
                                     Icon(
@@ -156,7 +158,9 @@ fun App() {
                             if (showBackIcon.value) {
                                 IconButton(
                                     onClick = {
-                                        navViewModel.navigateTo(Screen.Converter)
+                                        navController.navigate(
+                                            Screen.Converter,
+                                        )
                                     },
                                 ) {
                                     Icon(
@@ -189,7 +193,7 @@ fun App() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     AppNavHost(
-                        currentScreen = navViewModel.currentScreen,
+                        navHostController = navController,
                         refreshTrigger = { refreshTrigger.value },
                         onRefreshDone = onRefreshDone,
                         onAction = { action ->

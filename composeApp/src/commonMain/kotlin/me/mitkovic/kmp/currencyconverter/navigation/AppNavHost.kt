@@ -1,6 +1,11 @@
 package me.mitkovic.kmp.currencyconverter.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import currencyconverter_kmp.composeapp.generated.resources.Res
 import currencyconverter_kmp.composeapp.generated.resources.app_name
 import currencyconverter_kmp.composeapp.generated.resources.converter_favorites
@@ -14,13 +19,19 @@ import org.koin.compose.koinInject
 
 @Composable
 fun AppNavHost(
-    currentScreen: Screen,
+    navHostController: NavController,
     refreshTrigger: () -> Boolean,
     onRefreshDone: () -> Unit,
     onAction: (MainAction) -> Unit,
 ) {
-    when (currentScreen) {
-        is Screen.Converter -> {
+
+    NavHost(
+        navController = navHostController as NavHostController,
+        startDestination = Screen.Converter,
+    ) {
+
+        // CurrencyConverter screen
+        composable<Screen.Converter> {
             val converterViewModel: ConverterViewModel = koinInject<ConverterViewModel>()
             ConverterScreen(
                 viewModel = converterViewModel,
@@ -33,7 +44,9 @@ fun AppNavHost(
             onAction(MainAction.ShowBackIconChanged(false))
             onAction(MainAction.ShowReloadButtonChanged(true))
         }
-        is Screen.Favorites -> {
+
+        // Favorites screen
+        composable<Screen.Favorites> {
             val favoritesViewModel: FavoritesViewModel = koinInject<FavoritesViewModel>()
             FavoritesScreen(
                 viewModel = favoritesViewModel,
@@ -45,4 +58,5 @@ fun AppNavHost(
             onAction(MainAction.ShowReloadButtonChanged(false))
         }
     }
+
 }
