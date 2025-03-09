@@ -49,6 +49,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.sqldelight.runtime)
             api(libs.sqldelight.coroutines)
+            implementation(libs.androidx.navigation.compose)
         }
 
         androidMain.dependencies {
