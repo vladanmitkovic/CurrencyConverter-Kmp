@@ -1,6 +1,5 @@
 package me.mitkovic.kmp.currencyconverter.navigation
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
