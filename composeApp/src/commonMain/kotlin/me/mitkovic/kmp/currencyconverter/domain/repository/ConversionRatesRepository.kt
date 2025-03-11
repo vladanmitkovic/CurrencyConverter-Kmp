@@ -1,8 +1,8 @@
-package me.mitkovic.kmp.currencyconverter.data.repository.conversionrates
+package me.mitkovic.kmp.currencyconverter.domain.repository
 
 import kotlinx.coroutines.flow.Flow
-import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
+import me.mitkovic.kmp.currencyconverter.domain.model.ConversionRatesResponse
 
 interface ConversionRatesRepository {
 
