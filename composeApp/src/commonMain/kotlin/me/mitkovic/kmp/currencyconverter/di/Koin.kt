@@ -4,7 +4,6 @@ import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepositoryImpl
-import me.mitkovic.kmp.currencyconverter.data.repository.conversionrates.ConversionRatesRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.conversionrates.ConversionRatesRepositoryImpl
 import me.mitkovic.kmp.currencyconverter.data.repository.favorites.FavoritesRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.favorites.FavoritesRepositoryImpl
@@ -12,6 +11,7 @@ import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.Sele
 import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.SelectedCurrenciesRepositoryImpl
 import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepositoryImpl
+import me.mitkovic.kmp.currencyconverter.domain.repository.ConversionRatesRepository
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 import me.mitkovic.kmp.currencyconverter.platform.Platform
 import me.mitkovic.kmp.currencyconverter.platform.getPlatform
