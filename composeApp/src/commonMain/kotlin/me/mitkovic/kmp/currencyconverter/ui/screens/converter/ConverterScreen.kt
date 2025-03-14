@@ -21,16 +21,25 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -51,27 +60,37 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import currencyconverter_kmp.composeapp.generated.resources.Res
+import currencyconverter_kmp.composeapp.generated.resources.app_name
+import currencyconverter_kmp.composeapp.generated.resources.content_description_change_theme_icon
+import currencyconverter_kmp.composeapp.generated.resources.content_description_favorites_icon
 import currencyconverter_kmp.composeapp.generated.resources.content_description_swap_currencies
+import currencyconverter_kmp.composeapp.generated.resources.light_off
 import currencyconverter_kmp.composeapp.generated.resources.no_currency_detail
 import currencyconverter_kmp.composeapp.generated.resources.swap_horizontally
 import currencyconverter_kmp.composeapp.generated.resources.unknown
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.platform.formatDateTime
 import me.mitkovic.kmp.currencyconverter.platform.formatNumber
+import me.mitkovic.kmp.currencyconverter.ui.common.ApplicationTitle
+import me.mitkovic.kmp.currencyconverter.ui.common.NetworkStatusIndicator
 import me.mitkovic.kmp.currencyconverter.ui.common.StyledTextButton
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
 import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyConversionUtil
 import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyInfo
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConverterScreen(
     viewModel: ConverterViewModel,
-    refreshTrigger: () -> Boolean,
-    onRefreshDone: () -> Unit,
+    networkStatus: () -> ConnectivityObserver.Status?,
+    onFavoritesClick: () -> Unit,
+    onThemeClick: () -> Unit,
 ) {
     val uiState = viewModel.conversionRatesUiState.collectAsStateWithLifecycle()
     val state = uiState.value
@@ -86,17 +105,15 @@ fun ConverterScreen(
 
     val allCurrencies = favorites + nonFavoriteCurrencies
 
-    // Use refreshTrigger to trigger refresh in the ViewModel
-    LaunchedEffect(refreshTrigger()) {
-        viewModel.refreshConversionRates(
-            refreshTrigger(),
-        )
-        onRefreshDone()
-    }
-
     // Collect the selected currencies from the ViewModel
     val selectedCurrencyLeft by viewModel.selectedCurrencyLeft.collectAsState(initial = "")
     val selectedCurrencyRight by viewModel.selectedCurrencyRight.collectAsState(initial = "")
+
+    val rates: Map<String, Double> =
+        when (state) {
+            is ConversionRatesUiState.Success -> state.rates
+            else -> emptyMap()
+        }
 
     // Calculate conversion rate
     val conversionRate =
@@ -104,7 +121,7 @@ fun ConverterScreen(
             from = selectedCurrencyLeft,
             to = selectedCurrencyRight,
             baseCurrency = Constants.BASE_CURRENCY,
-            ratesWrapper = state.rates,
+            rates = rates,
         )
 
     var amountText by rememberSaveable { mutableStateOf("1") }
@@ -118,18 +135,66 @@ fun ConverterScreen(
     var firstTimeClicked by remember { mutableStateOf(false) }
     val resetFirstTimeClicked = rememberCoroutineScope()
 
-    Box(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .background(
-                    color = MaterialTheme.colorScheme.background,
+    val topBarTitle = remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        topBarTitle.value = getString(Res.string.app_name)
+    }
+
+    val currentNetworkStatus = networkStatus()
+    // snackbarHostState - used for displaying eventual errors in Scaffold snack bar
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    ApplicationTitle(topBarTitle.value, true)
+                },
+                colors =
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
                 ),
-    ) {
+                actions = {
+                    IconButton(
+                        onClick = onFavoritesClick,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FavoriteBorder,
+                            modifier = Modifier.size(MaterialTheme.spacing.iconSize),
+                            contentDescription = stringResource(Res.string.content_description_favorites_icon),
+                            tint = MaterialTheme.colorScheme.onBackground,
+                        )
+                    }
+                    IconButton(
+                        onClick = onThemeClick,
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.light_off),
+                            modifier = Modifier.size(MaterialTheme.spacing.iconSize),
+                            contentDescription = stringResource(Res.string.content_description_change_theme_icon),
+                            tint = MaterialTheme.colorScheme.onBackground,
+                        )
+                    }
+                },
+            )
+        },
+        bottomBar = {
+            NetworkStatusIndicator(
+                status = currentNetworkStatus,
+                snackbarHostState = snackbarHostState,
+                showReloadButton = true,
+            ) {
+                viewModel.refreshConversionRates()
+            }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { paddingValues ->
+
         Column(
             modifier =
                 Modifier
-                    .fillMaxSize(),
+                    .padding(paddingValues)
+                    .fillMaxSize()
         ) {
             Column(
                 modifier =
@@ -155,7 +220,11 @@ fun ConverterScreen(
                     },
                 )
 
-                val ratesTimestamp = state.timestamp
+                val ratesTimestamp: Long? =
+                    when (state) {
+                        is ConversionRatesUiState.Success -> state.timestamp
+                        else -> null
+                    }
 
                 // Display for the amount and its conversion
                 AmountAndConversionDisplay(
@@ -207,9 +276,10 @@ fun ConverterScreen(
 
             // Ticker holder
             Ticker(
-                ratesWrapper = state.rates,
+                rates = rates,
                 selectedCurrencyLeft = selectedCurrencyLeft,
             )
+
         }
     }
 }
@@ -522,10 +592,9 @@ fun NumericKeypad(
 
 @Composable
 fun Ticker(
-    ratesWrapper: Rates,
+    rates: Map<String, Double>,
     selectedCurrencyLeft: String,
 ) {
-    val rates = ratesWrapper.rates
     // Find the conversion rate for the selected currency relative to the base (EUR)
     val selectedCurrencyRateToBase = rates[selectedCurrencyLeft] ?: 1.0
 
@@ -579,7 +648,7 @@ fun ProgressIndicator(refreshState: ConversionRatesUiState) {
     var loading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    if (refreshState.isLoading && !loading) {
+    if (refreshState is ConversionRatesUiState.Loading && !loading) {
         loading = true
         LaunchedEffect(Unit) {
             scope.launch {
@@ -590,6 +659,7 @@ fun ProgressIndicator(refreshState: ConversionRatesUiState) {
             }
         }
     }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
