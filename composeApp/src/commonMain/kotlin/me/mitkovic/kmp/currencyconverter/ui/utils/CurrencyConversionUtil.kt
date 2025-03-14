@@ -1,16 +1,13 @@
 package me.mitkovic.kmp.currencyconverter.ui.utils
 
-import me.mitkovic.kmp.currencyconverter.ui.screens.converter.Rates
-
 object CurrencyConversionUtil {
 
     fun getConversionRate(
         from: String,
         to: String,
         baseCurrency: String,
-        ratesWrapper: Rates,
+        rates: Map<String, Double>,
     ): Double {
-        val rates = ratesWrapper.rates
         if (from == to) return 1.0
         val rateFromToBase = rates[from] ?: return 0.0 // from -> baseCurrency
         val rateBaseToTo = rates[to] ?: return 0.0 // baseCurrency -> to
