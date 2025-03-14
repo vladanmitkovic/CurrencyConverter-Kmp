@@ -143,7 +143,6 @@ fun ConverterScreen(
     val currentNetworkStatus = networkStatus()
     // snackbarHostState - used for displaying eventual errors in Scaffold snack bar
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {

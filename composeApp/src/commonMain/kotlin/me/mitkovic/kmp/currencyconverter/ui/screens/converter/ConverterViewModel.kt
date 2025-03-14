@@ -1,6 +1,5 @@
 package me.mitkovic.kmp.currencyconverter.ui.screens.converter
 
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

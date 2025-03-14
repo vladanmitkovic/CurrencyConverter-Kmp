@@ -1,6 +1,5 @@
 package me.mitkovic.kmp.currencyconverter.ui.screens.favorites
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
