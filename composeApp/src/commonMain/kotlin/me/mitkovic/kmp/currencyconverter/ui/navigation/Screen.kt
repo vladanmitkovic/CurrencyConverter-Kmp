@@ -1,4 +1,4 @@
-package me.mitkovic.kmp.currencyconverter.navigation
+package me.mitkovic.kmp.currencyconverter.ui.navigation
 
 import kotlinx.serialization.Serializable
 
