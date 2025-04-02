@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
-import me.mitkovic.kmp.currencyconverter.navigation.AppNavHost
+import me.mitkovic.kmp.currencyconverter.ui.navigation.AppNavHost
 import me.mitkovic.kmp.currencyconverter.ui.theme.AppTheme
 import org.koin.compose.koinInject
 

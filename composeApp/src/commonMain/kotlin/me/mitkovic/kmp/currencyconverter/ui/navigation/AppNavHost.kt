@@ -1,4 +1,4 @@
-package me.mitkovic.kmp.currencyconverter.navigation
+package me.mitkovic.kmp.currencyconverter.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
