@@ -16,6 +16,7 @@ import platform.darwin.DISPATCH_QUEUE_PRIORITY_DEFAULT
 import platform.darwin.dispatch_get_global_queue
 
 class ConnectivityObserverImpl : ConnectivityObserver {
+
     override fun observe(): Flow<ConnectivityObserver.Status> =
         callbackFlow {
             val monitor = nw_path_monitor_create()

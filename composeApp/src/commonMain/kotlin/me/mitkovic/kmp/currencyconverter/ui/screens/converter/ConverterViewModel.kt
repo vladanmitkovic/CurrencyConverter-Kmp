@@ -94,7 +94,7 @@ class ConverterViewModel(
                         }
                     }.onStart {
                         emit(
-                            ConversionRatesUiState.Loading
+                            ConversionRatesUiState.Loading,
                         )
                     }.catch { e ->
                         emit(
