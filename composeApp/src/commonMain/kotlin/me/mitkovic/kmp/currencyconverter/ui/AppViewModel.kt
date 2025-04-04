@@ -38,7 +38,7 @@ class AppViewModel(
         }
     }
 
-    private fun fetchConversionRates() {
+    fun fetchConversionRates() {
         viewModelScope.launch {
             currencyConverterRepository
                 .conversionRatesRepository

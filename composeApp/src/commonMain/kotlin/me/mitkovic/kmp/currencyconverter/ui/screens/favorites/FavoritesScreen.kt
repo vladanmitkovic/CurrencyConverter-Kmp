@@ -44,10 +44,8 @@ import currencyconverter_kmp.composeapp.generated.resources.converter_favorites
 import currencyconverter_kmp.composeapp.generated.resources.remove
 import currencyconverter_kmp.composeapp.generated.resources.remove_circle
 import currencyconverter_kmp.composeapp.generated.resources.your_favorites
-import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.Constants.PREFERRED_CURRENCY_ORDER
 import me.mitkovic.kmp.currencyconverter.ui.common.ApplicationTitle
-import me.mitkovic.kmp.currencyconverter.ui.common.NetworkStatusIndicator
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -57,7 +55,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun FavoritesScreen(
     viewModel: FavoritesViewModel,
-    networkStatus: () -> ConnectivityObserver.Status?,
+    networkStatusIndicator: @Composable (SnackbarHostState, Boolean, () -> Unit) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    showReloadButton: Boolean,
+    onReload: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     // Collecting the favorites list as state
@@ -65,10 +66,6 @@ fun FavoritesScreen(
 
     // Exclude favorite currencies from PREFERRED_CURRENCY_ORDER
     val nonFavoriteCurrencies = PREFERRED_CURRENCY_ORDER.filterNot { it in favorites }
-
-    val currentNetworkStatus = networkStatus()
-// snackbarHostState - used for displaying eventual errors in Scaffold snack bar
-    val snackbarHostState = remember { SnackbarHostState() }
 
     val topBarTitle = remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
@@ -82,31 +79,24 @@ fun FavoritesScreen(
                     ApplicationTitle(topBarTitle.value, false)
                 },
                 colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                ),
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                    ),
                 navigationIcon = {
-                        IconButton(
-                            onClick = onBackClick,
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                modifier = Modifier.size(MaterialTheme.spacing.iconSize),
-                                contentDescription = stringResource(Res.string.content_description_back_arrow),
-                                tint = MaterialTheme.colorScheme.onBackground,
-                            )
-                        }
+                    IconButton(
+                        onClick = onBackClick,
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            modifier = Modifier.size(MaterialTheme.spacing.iconSize),
+                            contentDescription = stringResource(Res.string.content_description_back_arrow),
+                            tint = MaterialTheme.colorScheme.onBackground,
+                        )
+                    }
                 },
             )
         },
-        bottomBar = {
-            NetworkStatusIndicator(
-                status = currentNetworkStatus,
-                snackbarHostState = snackbarHostState,
-                showReloadButton = false,
-                onReload = {},
-            )
-        },
+        bottomBar = { networkStatusIndicator(snackbarHostState, showReloadButton, onReload) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
 
