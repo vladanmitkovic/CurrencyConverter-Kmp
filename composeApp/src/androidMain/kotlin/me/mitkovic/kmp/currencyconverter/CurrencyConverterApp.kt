@@ -13,6 +13,7 @@ class CurrencyConverterApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
         initKoin {
             androidContext(this@CurrencyConverterApp)
         }

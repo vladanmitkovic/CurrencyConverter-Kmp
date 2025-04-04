@@ -56,17 +56,17 @@ fun NetworkStatusIndicator(
         // Box with network status and reload icon
         Box(
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .height(MaterialTheme.spacing.bottomBarHeight)
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(horizontal = platformHorizontalPadding()),
+                Modifier
+                    .fillMaxWidth()
+                    .height(MaterialTheme.spacing.bottomBarHeight)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(horizontal = platformHorizontalPadding()),
         ) {
             // Row to hold icons
             Row(
                 modifier =
-                Modifier
-                    .fillMaxSize(),
+                    Modifier
+                        .fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Reload Icon on the left
@@ -78,8 +78,8 @@ fun NetworkStatusIndicator(
                             Icon(
                                 Icons.Default.Refresh,
                                 modifier =
-                                Modifier
-                                    .size(MaterialTheme.spacing.iconSize),
+                                    Modifier
+                                        .size(MaterialTheme.spacing.iconSize),
                                 contentDescription = stringResource(Res.string.content_description_refresh_icon),
                                 tint = MaterialTheme.colorScheme.background,
                             )
