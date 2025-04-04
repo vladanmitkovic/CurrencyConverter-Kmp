@@ -70,12 +70,10 @@ import currencyconverter_kmp.composeapp.generated.resources.swap_horizontally
 import currencyconverter_kmp.composeapp.generated.resources.unknown
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.platform.formatDateTime
 import me.mitkovic.kmp.currencyconverter.platform.formatNumber
 import me.mitkovic.kmp.currencyconverter.ui.common.ApplicationTitle
-import me.mitkovic.kmp.currencyconverter.ui.common.NetworkStatusIndicator
 import me.mitkovic.kmp.currencyconverter.ui.common.StyledTextButton
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
 import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyConversionUtil
@@ -88,7 +86,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ConverterScreen(
     viewModel: ConverterViewModel,
-    networkStatus: () -> ConnectivityObserver.Status?,
+    networkStatusIndicator: @Composable (SnackbarHostState, Boolean, () -> Unit) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    showReloadButton: Boolean,
+    onReload: () -> Unit,
     onFavoritesClick: () -> Unit,
     onThemeClick: () -> Unit,
 ) {
@@ -140,10 +141,6 @@ fun ConverterScreen(
         topBarTitle.value = getString(Res.string.app_name)
     }
 
-    val currentNetworkStatus = networkStatus()
-    // snackbarHostState - used for displaying eventual errors in Scaffold snack bar
-    val snackbarHostState = remember { SnackbarHostState() }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -151,9 +148,9 @@ fun ConverterScreen(
                     ApplicationTitle(topBarTitle.value, true)
                 },
                 colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                ),
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                    ),
                 actions = {
                     IconButton(
                         onClick = onFavoritesClick,
@@ -178,15 +175,7 @@ fun ConverterScreen(
                 },
             )
         },
-        bottomBar = {
-            NetworkStatusIndicator(
-                status = currentNetworkStatus,
-                snackbarHostState = snackbarHostState,
-                showReloadButton = true,
-            ) {
-                viewModel.refreshConversionRates()
-            }
-        },
+        bottomBar = { networkStatusIndicator(snackbarHostState, showReloadButton, onReload) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
 
@@ -194,7 +183,7 @@ fun ConverterScreen(
             modifier =
                 Modifier
                     .padding(paddingValues)
-                    .fillMaxSize()
+                    .fillMaxSize(),
         ) {
             Column(
                 modifier =
@@ -279,7 +268,6 @@ fun ConverterScreen(
                 rates = rates,
                 selectedCurrencyLeft = selectedCurrencyLeft,
             )
-
         }
     }
 }
