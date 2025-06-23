@@ -2,6 +2,7 @@ package me.mitkovic.kmp.currencyconverter.di
 
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -83,16 +84,11 @@ actual fun platformModule() =
             ConnectivityObserverImpl()
         }
 
-        single {
-            HttpClient {
+        // Ktor HTTP client with CIO + JSON
+        single<HttpClient> {
+            HttpClient(CIO) {
                 install(ContentNegotiation) {
-                    json(
-                        Json {
-                            ignoreUnknownKeys = true
-                            prettyPrint = true
-                            isLenient = true
-                        },
-                    )
+                    json(get())
                 }
             }
         }
