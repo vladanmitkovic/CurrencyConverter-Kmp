@@ -87,16 +87,11 @@ actual fun platformModule() =
             ConnectivityObserverImpl()
         }
 
-        single {
+        // Ktor HTTP client with Darwin + JSON
+        single<HttpClient> {
             HttpClient(Darwin) {
                 install(ContentNegotiation) {
-                    json(
-                        Json {
-                            ignoreUnknownKeys = true
-                            prettyPrint = true
-                            isLenient = true
-                        },
-                    )
+                    json(get())
                 }
             }
         }
