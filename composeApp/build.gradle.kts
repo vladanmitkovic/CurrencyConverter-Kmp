@@ -34,43 +34,71 @@ kotlin {
         val desktopMain by getting
 
         commonMain.dependencies {
+            // Compose & UI
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
+            // AndroidX & Lifecycle
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.navigation.compose)
+
+            // Koin
             implementation(libs.koin.core)
             implementation(libs.koin.composeVM)
+
+            // Coroutines
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.kotlinx.serialization.json)
+
+            // SQLDelight
             implementation(libs.sqldelight.runtime)
             api(libs.sqldelight.coroutines)
-            implementation(libs.androidx.navigation.compose)
+
+            // Serialization
+            implementation(libs.kotlinx.serialization.json)
+
+            // Ktor (shared)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
+            // Icons
+            implementation(compose.materialIconsExtended)
         }
 
         androidMain.dependencies {
+            // Android UI
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
+            // Koin Android
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+
+            // Timber & DataStore
             implementation(libs.timber)
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.datastore.core)
-            implementation(libs.retrofit.core)
-            implementation(libs.retrofit.converter.gson)
-            implementation(libs.okhttp.logging)
+
+            // SQLDelight Android driver
             implementation(libs.sqldelight.android.driver)
+
+            // Ktor engine + logging
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.okhttp.logging)
         }
 
         iosMain.dependencies {
             implementation(libs.koin.core)
-            implementation(libs.ktor.client.core)
+
+            // Ktor engine for iOS
             implementation(libs.ktor.client.darwin)
-            implementation(libs.ktor.client.content.negotiation)
+
+            // SQLDelight native driver
             implementation(libs.sqldelight.native.driver)
         }
 
@@ -78,9 +106,11 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.koin.core)
+
+            // Ktor engine for Desktop
             implementation(libs.ktor.client.cio)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
+
+            // SQLDelight SQLite driver
             implementation(libs.sqldelight.sqlite.driver)
         }
     }

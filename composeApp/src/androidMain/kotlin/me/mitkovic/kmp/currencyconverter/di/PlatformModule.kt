@@ -7,10 +7,13 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserverImpl
-import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
@@ -20,17 +23,12 @@ import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.SelectedC
 import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.SelectedCurrenciesDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSourceImpl
-import me.mitkovic.kmp.currencyconverter.data.remote.ApiService
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 import me.mitkovic.kmp.currencyconverter.logging.AppLoggerImpl
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 actual fun platformModule() =
     module {
@@ -98,32 +96,22 @@ actual fun platformModule() =
             )
         }
 
-        single {
-            OkHttpClient
-                .Builder()
-                .addInterceptor(
-                    HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BODY
-                    },
-                ).build()
-        }
-
-        single {
-            Retrofit
-                .Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(get<OkHttpClient>())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        }
-
-        single {
-            get<Retrofit>().create(ApiService::class.java)
+        single<HttpClient> {
+            HttpClient(OkHttp) {
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            ignoreUnknownKeys = true
+                            isLenient = true
+                        },
+                    )
+                }
+            }
         }
 
         single<RemoteDataSource> {
             RemoteDataSourceImpl(
-                apiService = get<ApiService>(),
+                client = get<HttpClient>(),
                 logger = get<AppLogger>(),
             )
         }
