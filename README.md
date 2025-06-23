@@ -1,6 +1,6 @@
 # Exchangify - Currency Converter - KMP
 
-**Exchangify** - Currency Converter - KMP is a **Kotlin Multiplatform** project targeting Android, iOS and Desktop, built with Compose Multiplatform, Navigation Compose, Flow, Koin, Retrofit, Ktor, SqlDelight, DataStore, NSUserDefaults and Material3 based on MVVM architecture.
+**Exchangify** - Currency Converter - KMP is a **Kotlin Multiplatform** project targeting Android, iOS and Desktop, built with Compose Multiplatform, Navigation Compose, Flow, Koin, Ktor, SqlDelight, DataStore, NSUserDefaults and Material3 based on MVVM architecture.
 
 <img src="previews/Exchangify.png" alt="App screenshot" style="max-width: 100%;">
 
@@ -40,8 +40,7 @@ This is a **Kotlin Multiplatform** project targeting Android, iOS and Desktop.
 
 **Exchangify** - Currency Converter - KMP is built using a modern stack of technologies designed to offer robust performance and scalability:
 - **Compose Multiplatform**: For building native UIs.
-- **Retrofit**: For Android network operations.
-- **Ktor**: For iOS and Desktop network operations.
+- **Ktor**: For network operations.
 - **SQL Delight Database**: For local data storage.
 - **MVVM (Model-View-ViewModel)**: Architectural pattern.
 - **DI Koin**: Dependency injection.
