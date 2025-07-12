@@ -63,9 +63,14 @@ val commonModule =
 
 expect fun platformModule(): Module
 
-fun initKoin(appDeclaration: KoinApplication.() -> Unit = {}) {
-    startKoin {
-        modules(commonModule, platformModule(), viewModelModule)
-        appDeclaration()
+fun initKoin(koinContext: KoinApplication.() -> Unit = {}) {
+    try {
+        startKoin {
+            koinContext()
+            modules(commonModule, platformModule(), viewModelModule)
+        }
+    } catch (e: Exception) {
+        println("Koin init failed: ${e.message}")
+        throw RuntimeException("Koin init failed", e)
     }
 }
