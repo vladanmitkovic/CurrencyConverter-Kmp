@@ -124,7 +124,7 @@ fun ConverterScreen(
     // Parse the input text to a Double, defaulting to 1.0 if parsing fails
     val amount = amountText.toDoubleOrNull() ?: 1.0
     // Calculate converted amount based on the user input
-    val convertedAmount = formatNumber(amount * conversionRate, 2).toDouble()
+    val convertedAmount = amount * conversionRate
 
     // Remember a ScrollState for the Column
     val scrollState = rememberScrollState()
