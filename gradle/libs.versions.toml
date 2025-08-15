@@ -1,22 +1,22 @@
 [versions]
-agp = "8.10.1"
-android-compileSdk = "35"
+agp = "8.12.0"
+android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "35"
 androidx-activityCompose = "1.10.1"
-androidx-lifecycle = "2.9.0"
-compose-multiplatform = "1.8.1"
-kotlin = "2.1.21"
+androidx-lifecycle = "2.9.1"
+compose-multiplatform = "1.8.2"
+kotlin = "2.2.10"
 kotlinx-coroutines = "1.10.2"
-kotlinxSerializationJson = "1.8.1"
+kotlinxSerializationJson = "1.9.0"
 
 koin = "4.0.2"
 timber = "5.0.1"
 datastore = "1.1.7"
-ktor = "3.1.1"
-okhttp = "4.12.0"
-sqldelight = "2.0.0"
-androidx-navigation = "2.8.0-alpha11"
+ktor = "3.2.3"
+okhttp = "5.1.0"
+sqldelight = "2.1.0"
+androidx-navigation = "2.8.0-alpha13"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
