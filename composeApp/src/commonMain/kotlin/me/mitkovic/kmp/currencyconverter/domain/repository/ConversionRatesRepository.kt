@@ -8,5 +8,5 @@ interface ConversionRatesRepository {
 
     fun getConversionRates(): Flow<Resource<ConversionRatesResponse?>>
 
-    fun refreshConversionRates(): Flow<Resource<ConversionRatesResponse?>>
+    suspend fun refreshConversionRates(): Resource<ConversionRatesResponse?>
 }

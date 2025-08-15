@@ -4,7 +4,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
-import kotlinx.coroutines.flow.flow
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
@@ -14,20 +13,18 @@ class RemoteDataSourceImpl(
     private val client: HttpClient,
     private val logger: AppLogger,
 ) : RemoteDataSource {
-    override suspend fun getConversionRates() =
-        flow {
-            emit(Resource.Loading)
-            try {
-                val resp: ConversionRatesResponse =
-                    client
-                        .get("${Constants.BASE_URL}/conversion_rates/rates_data.json") {
-                            parameter("api_key", "apiKey")
-                        }.body()
-                emit(Resource.Success(resp))
-            } catch (e: Exception) {
-                logger.logError("RemoteDataSource", e.message, e)
-                // emit(Resource.Error(e.message ?: "Unknown error"))
-                throw e
-            }
+
+    override suspend fun getConversionRates(): Resource<ConversionRatesResponse> {
+        try {
+            val resp: ConversionRatesResponse =
+                client
+                    .get("${Constants.BASE_URL}/conversion_rates/rates_data.json") {
+                        parameter("api_key", "apiKey")
+                    }.body()
+            return Resource.Success(resp)
+        } catch (e: Exception) {
+            logger.logError("RemoteDataSource", e.message, e)
+            return Resource.Error(e.message ?: "Unknown error", throwable = e)
         }
+    }
 }
