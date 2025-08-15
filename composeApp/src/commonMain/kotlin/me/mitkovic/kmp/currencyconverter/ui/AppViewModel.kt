@@ -38,6 +38,10 @@ class AppViewModel(
         }
     }
 
+    fun toggleTheme() {
+        theme.value?.let { updateTheme(!it) }
+    }
+
     fun fetchConversionRates() {
         viewModelScope.launch {
             currencyConverterRepository

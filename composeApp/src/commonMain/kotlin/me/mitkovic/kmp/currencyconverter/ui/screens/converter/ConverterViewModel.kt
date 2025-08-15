@@ -191,6 +191,8 @@ class ConverterViewModel(
         }
     }
 
+    fun logMessage(message: String) = logger.logError(ConverterViewModel::class.simpleName, message, null)
+
     /*
     private val _conversionRatesUiState = MutableStateFlow(ConversionRatesUiState())
     val conversionRatesUiState: StateFlow<ConversionRatesUiState> = _conversionRatesUiState.asStateFlow()
