@@ -1,8 +1,6 @@
 package me.mitkovic.kmp.currencyconverter.ui.navigation
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +17,7 @@ fun AppNavHost(
     onError: (String) -> Unit,
 ) {
     NavHost(
-        navController = navHostController as NavHostController,
+        navController = navHostController,
         startDestination = Screen.Converter,
     ) {
         // CurrencyConverter screen
