@@ -44,25 +44,24 @@ class AppViewModel(
 
     fun fetchConversionRates() {
         viewModelScope.launch {
-            currencyConverterRepository
-                .conversionRatesRepository
-                .refreshConversionRates()
-                .collect { result ->
-                    when (result) {
-                        is Resource.Success -> {
-                            logger.logDebug(AppViewModel::class.simpleName, "Success")
-                        }
-                        is Resource.Error -> {
-                            val errorMessage = "${Constants.ERROR_FETCHING_CONVERSION_RATES}: ${result.message}"
-                            result.message.let {
-                                logger.logError(AppViewModel::class.simpleName, errorMessage, Exception(it))
-                            }
-                        }
-                        is Resource.Loading -> {
-                            logger.logDebug(AppViewModel::class.simpleName, "Loading")
-                        }
+            val result =
+                currencyConverterRepository
+                    .conversionRatesRepository
+                    .refreshConversionRates()
+            when (result) {
+                is Resource.Success -> {
+                    logger.logDebug(AppViewModel::class.simpleName, "Success")
+                }
+                is Resource.Error -> {
+                    val errorMessage = "${Constants.ERROR_FETCHING_CONVERSION_RATES}: ${result.message}"
+                    result.message.let {
+                        logger.logError(AppViewModel::class.simpleName, errorMessage, Exception(it))
                     }
                 }
+                is Resource.Loading -> {
+                    logger.logDebug(AppViewModel::class.simpleName, "Loading")
+                }
+            }
         }
     }
 }

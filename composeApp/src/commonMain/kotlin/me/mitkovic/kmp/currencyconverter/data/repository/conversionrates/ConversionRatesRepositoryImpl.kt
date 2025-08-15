@@ -1,7 +1,8 @@
 package me.mitkovic.kmp.currencyconverter.data.repository.conversionrates
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.model.toDomainModel
@@ -18,55 +19,54 @@ class ConversionRatesRepositoryImpl(
 
     // This method emits locally stored conversion rates.
     override fun getConversionRates(): Flow<Resource<ConversionRatesResponse?>> =
-        flow {
-            try {
-                // Collect the local data source flow and emit its values.
-                localDataSource.conversionRates.getConversionRates().collect { localResponse ->
-                    val domainResponse = localResponse?.toDomainModel()
-                    emit(Resource.Success(domainResponse))
-                }
-            } catch (e: Exception) {
+        localDataSource.conversionRates
+            .getConversionRates()
+            .map { localResponse ->
+                val result: Resource<ConversionRatesResponse?> = Resource.Success(localResponse?.toDomainModel())
+                result
+            }.catch { e ->
                 logger.logError(
                     ConversionRatesRepositoryImpl::class.simpleName,
                     "Error fetching local conversion rates: ${e.message}",
                     e,
                 )
-                throw e
+                emit(Resource.Error(e.message ?: "Unknown error", e))
             }
-        }
 
     // This method refreshes the conversion rates from the remote source.
-    override fun refreshConversionRates(): Flow<Resource<ConversionRatesResponse?>> =
-        flow {
-            try {
-                remoteDataSource.getConversionRates().collect { remoteResult ->
-                    when (remoteResult) {
-                        is Resource.Success -> {
-                            // Save the successful remote data into the local database.
-                            localDataSource.conversionRates.saveConversionRates(remoteResult.data)
-                            val domainResponse = remoteResult.data.toDomainModel()
-                            emit(Resource.Success(domainResponse))
-                        }
-                        is Resource.Error -> {
-                            logger.logError(
-                                ConversionRatesRepositoryImpl::class.simpleName,
-                                "Remote error: ${remoteResult.throwable}",
-                                remoteResult.throwable,
-                            )
-                            emit(remoteResult)
-                        }
-                        is Resource.Loading -> {
-                            emit(remoteResult)
-                        }
-                    }
+    override suspend fun refreshConversionRates(): Resource<ConversionRatesResponse?> {
+        try {
+            val remoteResult = remoteDataSource.getConversionRates()
+            return when (remoteResult) {
+                is Resource.Success -> {
+                    // Save the successful remote data into the local database
+                    localDataSource.conversionRates.saveConversionRates(remoteResult.data)
+                    logger.logDebug(
+                        ConversionRatesRepositoryImpl::class.simpleName,
+                        "Database updated with remote data (timestamp: ${remoteResult.data.timestamp})",
+                    )
+                    Resource.Success(remoteResult.data.toDomainModel())
                 }
-            } catch (e: Exception) {
-                logger.logError(
-                    ConversionRatesRepositoryImpl::class.simpleName,
-                    "Error refreshing conversion rates: ${e.message}",
-                    e,
-                )
-                throw e
+                is Resource.Error -> {
+                    logger.logError(
+                        ConversionRatesRepositoryImpl::class.simpleName,
+                        "Remote error: ${remoteResult.message}",
+                        remoteResult.throwable,
+                    )
+                    remoteResult
+                }
+                else -> {
+                    // Remote shouldn't return Loading, but handle gracefully if it does
+                    Resource.Error("Unexpected state from remote")
+                }
             }
+        } catch (e: Exception) {
+            logger.logError(
+                ConversionRatesRepositoryImpl::class.simpleName,
+                "Error refreshing conversion rates: ${e.message}",
+                e,
+            )
+            return Resource.Error(e.message ?: "Unknown error", throwable = e)
         }
+    }
 }

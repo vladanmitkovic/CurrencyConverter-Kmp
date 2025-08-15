@@ -6,11 +6,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -34,13 +32,13 @@ sealed class ConversionRatesUiState {
     ) : ConversionRatesUiState()
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ConverterViewModel(
     private val currencyConverterRepository: CurrencyConverterRepository,
     private val logger: AppLogger,
 ) : ViewModel() {
 
-    private val refreshTrigger = MutableStateFlow(false)
+    private val _refreshRatesUiState = MutableStateFlow<ConversionRatesUiState>(ConversionRatesUiState.Success(emptyMap(), null))
+    val refreshRatesUiState: StateFlow<ConversionRatesUiState> = _refreshRatesUiState.asStateFlow()
 
     val conversionRatesUiState: StateFlow<ConversionRatesUiState> =
         currencyConverterRepository
@@ -65,48 +63,8 @@ class ConverterViewModel(
                     is Resource.Loading ->
                         ConversionRatesUiState.Loading
                 }
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = ConversionRatesUiState.Success(emptyMap(), null),
-            )
-
-    val refreshRatesUiState: StateFlow<ConversionRatesUiState> =
-        refreshTrigger
-            .filter { trigger -> trigger } // Only proceed if true.
-            .flatMapLatest {
-                currencyConverterRepository
-                    .conversionRatesRepository
-                    .refreshConversionRates()
-                    .map { resource ->
-                        when (resource) {
-                            is Resource.Loading ->
-                                ConversionRatesUiState.Loading
-                            is Resource.Success ->
-                                ConversionRatesUiState.Success(
-                                    rates = resource.data?.conversion_rates ?: emptyMap(),
-                                    timestamp = resource.data?.timestamp,
-                                )
-                            is Resource.Error ->
-                                ConversionRatesUiState.Error(
-                                    error = resource.message,
-                                )
-                        }
-                    }.onStart {
-                        emit(
-                            ConversionRatesUiState.Loading,
-                        )
-                    }.catch { e ->
-                        emit(
-                            ConversionRatesUiState.Error(
-                                error = e.message ?: "Unknown error",
-                            ),
-                        )
-                    }
-                    // Reset the trigger after completion.
-                    .onCompletion {
-                        refreshTrigger.value = false
-                    }
+            }.onEach { uiState ->
+                logger.logDebug(ConverterViewModel::class.simpleName, "UI state updated: $uiState")
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
@@ -115,7 +73,34 @@ class ConverterViewModel(
 
     fun refreshConversionRates() {
         logger.logDebug(ConverterViewModel::class.simpleName, "refreshConversionRates invoked")
-        refreshTrigger.value = true // Update the trigger to invoke the flow
+        viewModelScope.launch {
+            _refreshRatesUiState.value = ConversionRatesUiState.Loading
+            try {
+                val resource =
+                    currencyConverterRepository
+                        .conversionRatesRepository
+                        .refreshConversionRates()
+                _refreshRatesUiState.value =
+                    when (resource) {
+                        is Resource.Success ->
+                            ConversionRatesUiState.Success(
+                                rates = resource.data?.conversion_rates ?: emptyMap(),
+                                timestamp = resource.data?.timestamp,
+                            )
+                        is Resource.Error ->
+                            ConversionRatesUiState.Error(
+                                error = resource.message,
+                            )
+                        is Resource.Loading ->
+                            ConversionRatesUiState.Loading
+                    }
+            } catch (e: Exception) {
+                _refreshRatesUiState.value =
+                    ConversionRatesUiState.Error(
+                        error = e.message ?: "Unknown error",
+                    )
+            }
+        }
     }
 
     val favorites: StateFlow<List<String>> =
