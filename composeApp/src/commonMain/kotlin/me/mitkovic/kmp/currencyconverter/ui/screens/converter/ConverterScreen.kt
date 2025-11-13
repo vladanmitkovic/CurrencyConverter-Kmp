@@ -32,7 +32,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,8 +42,6 @@ import currencyconverter_kmp.composeapp.generated.resources.Res
 import currencyconverter_kmp.composeapp.generated.resources.content_description_swap_currencies
 import currencyconverter_kmp.composeapp.generated.resources.swap_horizontally
 import currencyconverter_kmp.composeapp.generated.resources.unknown
-import kotlinx.coroutines.delay
-import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.platform.formatDateTime
 import me.mitkovic.kmp.currencyconverter.platform.formatNumber
 import me.mitkovic.kmp.currencyconverter.ui.common.CurrencyWithFlag
@@ -54,7 +51,6 @@ import me.mitkovic.kmp.currencyconverter.ui.common.NumericKeypad
 import me.mitkovic.kmp.currencyconverter.ui.common.ProgressIndicator
 import me.mitkovic.kmp.currencyconverter.ui.common.Ticker
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
-import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyConversionUtil
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -80,7 +76,7 @@ fun ConverterScreen(
         }
     }
 
-    // Handle errors from both initial load and refresh
+    // Error handling in UI (simpler and avoids race conditions)
     var lastError by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(state, refreshState) {
         val error =
@@ -97,45 +93,22 @@ fun ConverterScreen(
 
     // Collecting the favorites list as state
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()
-    // Exclude favorite currencies from PREFERRED_CURRENCY_ORDER
-    val nonFavoriteCurrencies = Constants.PREFERRED_CURRENCY_ORDER.filterNot { it in favorites }
-    val allCurrencies = favorites + nonFavoriteCurrencies
 
-    // Collect the selected currencies from the ViewModel
+    // Using ViewModel's orderedCurrencies
+    val allCurrencies by viewModel.orderedCurrencies.collectAsStateWithLifecycle()
+
     val selectedCurrencyLeft by viewModel.selectedCurrencyLeft.collectAsState(initial = "")
     val selectedCurrencyRight by viewModel.selectedCurrencyRight.collectAsState(initial = "")
 
-    val rates: Map<String, Double> =
-        when (state) {
-            is ConversionRatesUiState.Success -> state.rates
-            else -> emptyMap()
-        }
+    // Using ViewModel's rates flow
+    val rates by viewModel.rates.collectAsStateWithLifecycle()
 
-    // Calculate conversion rate
-    val conversionRate =
-        CurrencyConversionUtil.getConversionRate(
-            from = selectedCurrencyLeft,
-            to = selectedCurrencyRight,
-            baseCurrency = Constants.BASE_CURRENCY,
-            rates = rates,
-        )
+    // Using ViewModel's computed states
+    val amount by viewModel.amount.collectAsStateWithLifecycle()
+    val convertedAmount by viewModel.convertedAmount.collectAsStateWithLifecycle()
 
-    var amountText by rememberSaveable { mutableStateOf("1") } // For the TextField input
-    // Parse the input text to a Double, defaulting to 1.0 if parsing fails
-    val amount = amountText.toDoubleOrNull() ?: 1.0
-    // Calculate converted amount based on the user input
-    val convertedAmount = amount * conversionRate
-
-    // Remember a ScrollState for the Column
     val scrollState = rememberScrollState()
-    var firstTimeClicked by remember { mutableStateOf(false) }
 
-    LaunchedEffect(firstTimeClicked) {
-        if (firstTimeClicked) {
-            delay(5000)
-            firstTimeClicked = false
-        }
-    }
     Column(
         modifier =
             Modifier
@@ -153,13 +126,9 @@ fun ConverterScreen(
                 rates = allCurrencies,
                 favorites = favorites,
                 selectedCurrencyLeft = selectedCurrencyLeft,
-                onCurrencyLeftSelected = { currency ->
-                    viewModel.setSelectedCurrencyLeft(currency)
-                },
+                onCurrencyLeftSelected = viewModel::setSelectedCurrencyLeft,
                 selectedCurrencyRight = selectedCurrencyRight,
-                onCurrencyRightSelected = { currency ->
-                    viewModel.setSelectedCurrencyRight(currency)
-                },
+                onCurrencyRightSelected = viewModel::setSelectedCurrencyRight,
                 onSwapCurrencies = {
                     viewModel.swapCurrencies()
                 },
@@ -180,25 +149,11 @@ fun ConverterScreen(
                 convertedAmount = convertedAmount,
             )
 
+            // CHANGED: Using ViewModel methods for keypad actions
             NumericKeypad(
-                onNumberClick = { number ->
-                    if (!firstTimeClicked) {
-                        amountText = number
-                        firstTimeClicked = true
-                    } else {
-                        amountText += number
-                    }
-                },
-                onDecimalClick = {
-                    if (!amountText.contains(".")) {
-                        amountText += "."
-                    }
-                },
-                onDeleteClick = {
-                    if (amountText.isNotEmpty()) {
-                        amountText = amountText.dropLast(1)
-                    }
-                },
+                onNumberClick = viewModel::onNumberClick,
+                onDecimalClick = viewModel::onDecimalClick,
+                onDeleteClick = viewModel::onDeleteClick,
             )
         }
 
@@ -283,17 +238,16 @@ fun CurrencySelectionDropdown(
             onClick = { expanded = true },
             modifier =
                 Modifier
-                    .clip(RoundedCornerShape(MaterialTheme.spacing.extraMedium)) // Applies rounded corners
+                    .clip(RoundedCornerShape(MaterialTheme.spacing.extraMedium))
                     .height(MaterialTheme.spacing.currencySelection)
                     .width(MaterialTheme.spacing.xxLarge),
-            // Sets the height of the button
-            shape = RoundedCornerShape(MaterialTheme.spacing.extraMedium), // Specifies the rounded shape of the button
-            contentPadding = PaddingValues(MaterialTheme.spacing.small), // Adjusts padding inside the button
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)), // Sets a semi-transparent border
+            shape = RoundedCornerShape(MaterialTheme.spacing.extraMedium),
+            contentPadding = PaddingValues(MaterialTheme.spacing.small),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
             colors =
                 ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary, // Button background color
-                    contentColor = MaterialTheme.colorScheme.onPrimary, // Content (text/icon) color
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
         ) {
             CurrencyWithFlag(selectedCurrency)

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -29,6 +30,17 @@ class FavoritesViewModel(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = Constants.PREFERRED_FAVORITES,
+            )
+
+    // Non-favorite currencies list
+    val nonFavoriteCurrencies: StateFlow<List<String>> =
+        favorites
+            .map { favoritesList ->
+                Constants.PREFERRED_CURRENCY_ORDER.filterNot { it in favoritesList }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
             )
 
     fun addFavorite(currency: String) {
