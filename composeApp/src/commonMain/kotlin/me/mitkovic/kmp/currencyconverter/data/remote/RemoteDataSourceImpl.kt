@@ -7,12 +7,12 @@ import io.ktor.client.request.parameter
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
-import me.mitkovic.kmp.currencyconverter.logging.AppLogger
+import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 
 class RemoteDataSourceImpl(
     private val client: HttpClient,
-    private val logger: AppLogger,
-) : RemoteDataSource {
+    private val logger: IAppLogger,
+) : IRemoteDataSource {
 
     override suspend fun getConversionRates(): Resource<ConversionRatesResponse> {
         try {

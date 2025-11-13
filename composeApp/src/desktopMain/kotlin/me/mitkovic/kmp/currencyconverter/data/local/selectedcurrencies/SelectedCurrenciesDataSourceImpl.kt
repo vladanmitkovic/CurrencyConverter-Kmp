@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import me.mitkovic.kmp.currencyconverter.common.Constants
 
-class SelectedCurrenciesDataSourceImpl : SelectedCurrenciesDataSource {
+class SelectedCurrenciesDataSourceImpl : ISelectedCurrenciesDataSource {
 
     private val selectedCurrencyLeftFlow =
         MutableStateFlow(

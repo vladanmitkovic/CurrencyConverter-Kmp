@@ -10,7 +10,7 @@ import me.mitkovic.kmp.currencyconverter.common.Constants
 
 class FavoritesDataSourceImpl(
     private val dataStore: DataStore<Preferences>,
-) : FavoritesDataSource {
+) : IFavoritesDataSource {
 
     companion object {
         private val FAVORITE_CURRENCIES_KEY = stringPreferencesKey("favorite_currencies")

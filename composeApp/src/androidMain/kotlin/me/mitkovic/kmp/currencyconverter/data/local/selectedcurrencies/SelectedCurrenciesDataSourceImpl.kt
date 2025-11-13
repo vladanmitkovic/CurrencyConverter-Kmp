@@ -10,7 +10,7 @@ import me.mitkovic.kmp.currencyconverter.common.Constants
 
 class SelectedCurrenciesDataSourceImpl(
     private val dataStore: DataStore<Preferences>,
-) : SelectedCurrenciesDataSource {
+) : ISelectedCurrenciesDataSource {
 
     companion object {
         val SELECTED_CURRENCY_LEFT_KEY = stringPreferencesKey("selected_currency_left")

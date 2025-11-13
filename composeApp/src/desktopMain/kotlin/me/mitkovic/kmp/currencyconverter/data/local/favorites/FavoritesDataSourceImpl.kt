@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import me.mitkovic.kmp.currencyconverter.common.Constants
 
-class FavoritesDataSourceImpl : FavoritesDataSource {
+class FavoritesDataSourceImpl : IFavoritesDataSource {
 
     private val favoritesFlow = MutableStateFlow(Constants.PREFERRED_FAVORITES)
 

@@ -1,8 +1,8 @@
-package me.mitkovic.kmp.currencyconverter.data.local.favorites
+package me.mitkovic.kmp.currencyconverter.data.repository.favorites
 
 import kotlinx.coroutines.flow.Flow
 
-interface FavoritesDataSource {
+interface IFavoritesRepository {
 
     fun getFavoriteCurrencies(): Flow<List<String>>
 
