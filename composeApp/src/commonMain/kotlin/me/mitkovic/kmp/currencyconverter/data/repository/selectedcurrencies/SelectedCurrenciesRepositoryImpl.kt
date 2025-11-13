@@ -1,11 +1,11 @@
 package me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies
 
 import kotlinx.coroutines.flow.Flow
-import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.ILocalDataSource
 
 class SelectedCurrenciesRepositoryImpl(
-    private val localDataSource: LocalDataSource,
-) : SelectedCurrenciesRepository {
+    private val localDataSource: ILocalDataSource,
+) : ISelectedCurrenciesRepository {
 
     override suspend fun setSelectedCurrencyLeft(currencyCode: String) {
         localDataSource.selectedCurrencies.setSelectedCurrencyLeft(currencyCode = currencyCode)

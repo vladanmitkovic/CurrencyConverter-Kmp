@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 
 class ThemeDataSourceImpl(
     private val dataStore: DataStore<Preferences>,
-) : ThemeDataSource {
+) : IThemeDataSource {
 
     companion object {
         private val THEME_KEY = booleanPreferencesKey("is_light_mode")

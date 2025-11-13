@@ -1,18 +1,18 @@
 package me.mitkovic.kmp.currencyconverter.di
 
-import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
-import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
-import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
+import me.mitkovic.kmp.currencyconverter.data.local.ILocalDataSource
+import me.mitkovic.kmp.currencyconverter.data.remote.IRemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepositoryImpl
+import me.mitkovic.kmp.currencyconverter.data.repository.ICurrencyConverterRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.conversionrates.ConversionRatesRepositoryImpl
-import me.mitkovic.kmp.currencyconverter.data.repository.favorites.FavoritesRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.favorites.FavoritesRepositoryImpl
-import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.SelectedCurrenciesRepository
+import me.mitkovic.kmp.currencyconverter.data.repository.favorites.IFavoritesRepository
+import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.ISelectedCurrenciesRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.SelectedCurrenciesRepositoryImpl
-import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepository
+import me.mitkovic.kmp.currencyconverter.data.repository.theme.IThemeRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepositoryImpl
-import me.mitkovic.kmp.currencyconverter.domain.repository.ConversionRatesRepository
-import me.mitkovic.kmp.currencyconverter.logging.AppLogger
+import me.mitkovic.kmp.currencyconverter.domain.repository.IConversionRatesRepository
+import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 import me.mitkovic.kmp.currencyconverter.platform.Platform
 import me.mitkovic.kmp.currencyconverter.platform.getPlatform
 import org.koin.core.KoinApplication
@@ -25,38 +25,38 @@ val commonModule =
 
         single<Platform> { getPlatform() }
 
-        single<ConversionRatesRepository> {
+        single<IConversionRatesRepository> {
             ConversionRatesRepositoryImpl(
-                localDataSource = get<LocalDataSource>(),
-                remoteDataSource = get<RemoteDataSource>(),
-                logger = get<AppLogger>(),
+                localDataSource = get<ILocalDataSource>(),
+                remoteDataSource = get<IRemoteDataSource>(),
+                logger = get<IAppLogger>(),
             )
         }
 
-        single<ThemeRepository> {
+        single<IThemeRepository> {
             ThemeRepositoryImpl(
-                localDataSource = get<LocalDataSource>(),
+                localDataSource = get<ILocalDataSource>(),
             )
         }
 
-        single<FavoritesRepository> {
+        single<IFavoritesRepository> {
             FavoritesRepositoryImpl(
-                localDataSource = get<LocalDataSource>(),
+                localDataSource = get<ILocalDataSource>(),
             )
         }
 
-        single<SelectedCurrenciesRepository> {
+        single<ISelectedCurrenciesRepository> {
             SelectedCurrenciesRepositoryImpl(
-                localDataSource = get<LocalDataSource>(),
+                localDataSource = get<ILocalDataSource>(),
             )
         }
 
-        single<CurrencyConverterRepository> {
+        single<ICurrencyConverterRepository> {
             CurrencyConverterRepositoryImpl(
-                conversionRatesRepository = get<ConversionRatesRepository>(),
-                themeRepository = get<ThemeRepository>(),
-                favoritesRepository = get<FavoritesRepository>(),
-                selectedCurrenciesRepository = get<SelectedCurrenciesRepository>(),
+                conversionRatesRepository = get<IConversionRatesRepository>(),
+                themeRepository = get<IThemeRepository>(),
+                favoritesRepository = get<IFavoritesRepository>(),
+                selectedCurrenciesRepository = get<ISelectedCurrenciesRepository>(),
             )
         }
     }

@@ -1,21 +1,21 @@
 package me.mitkovic.kmp.currencyconverter.data.local
 
 import kotlinx.serialization.json.Json
-import me.mitkovic.kmp.currencyconverter.data.local.conversionrates.ConversionRatesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.conversionrates.ConversionRatesDataSourceImpl
+import me.mitkovic.kmp.currencyconverter.data.local.conversionrates.IConversionRatesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
-import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSource
-import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.SelectedCurrenciesDataSource
-import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.favorites.IFavoritesDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.ISelectedCurrenciesDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.theme.IThemeDataSource
 
 class LocalDataSourceImpl(
     database: CurrencyConverterDatabase,
     json: Json,
-    override val theme: ThemeDataSource,
-    override val favorites: FavoritesDataSource,
-    override val selectedCurrencies: SelectedCurrenciesDataSource,
+    override val theme: IThemeDataSource,
+    override val favorites: IFavoritesDataSource,
+    override val selectedCurrencies: ISelectedCurrenciesDataSource,
 ) : ConversionRatesDataSourceImpl(database, json),
-    LocalDataSource {
+    ILocalDataSource {
 
-    override val conversionRates: ConversionRatesDataSource get() = this
+    override val conversionRates: IConversionRatesDataSource get() = this
 }

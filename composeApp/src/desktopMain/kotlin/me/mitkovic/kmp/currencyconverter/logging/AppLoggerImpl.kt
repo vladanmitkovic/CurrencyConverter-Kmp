@@ -1,6 +1,6 @@
 package me.mitkovic.kmp.currencyconverter.logging
 
-class AppLoggerImpl : AppLogger {
+class AppLoggerImpl : IAppLogger {
 
     override fun logDebug(
         tag: String?,

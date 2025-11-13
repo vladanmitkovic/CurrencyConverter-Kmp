@@ -6,7 +6,7 @@ import platform.Foundation.NSUserDefaults
 
 class ThemeDataSourceImpl(
     private val defaults: NSUserDefaults,
-) : ThemeDataSource {
+) : IThemeDataSource {
 
     private val THEME_KEY = "is_dark_mode"
     private val isLightModeFlow = MutableStateFlow(defaults.boolForKey(THEME_KEY))

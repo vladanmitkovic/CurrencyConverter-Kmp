@@ -33,14 +33,14 @@ import currencyconverter_kmp.composeapp.generated.resources.network_status_conne
 import currencyconverter_kmp.composeapp.generated.resources.network_status_no_internet
 import currencyconverter_kmp.composeapp.generated.resources.network_status_unknown
 import kotlinx.coroutines.launch
-import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
+import me.mitkovic.kmp.currencyconverter.common.IConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.platform.platformHorizontalPadding
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NetworkStatusIndicator(
-    status: ConnectivityObserver.Status?,
+    status: IConnectivityObserver.Status?,
     snackbarHostState: SnackbarHostState,
     showReloadButton: Boolean,
     onReload: () -> Unit,

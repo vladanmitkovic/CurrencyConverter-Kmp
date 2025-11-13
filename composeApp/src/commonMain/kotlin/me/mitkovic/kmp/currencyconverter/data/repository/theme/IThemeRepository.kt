@@ -2,7 +2,7 @@ package me.mitkovic.kmp.currencyconverter.data.repository.theme
 
 import kotlinx.coroutines.flow.Flow
 
-interface ThemeRepository {
+interface IThemeRepository {
 
     suspend fun saveTheme(isDarkMode: Boolean)
 
