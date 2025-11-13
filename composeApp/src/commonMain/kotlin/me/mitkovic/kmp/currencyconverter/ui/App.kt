@@ -31,7 +31,7 @@ import currencyconverter_kmp.composeapp.generated.resources.content_description_
 import currencyconverter_kmp.composeapp.generated.resources.content_description_favorites_icon
 import currencyconverter_kmp.composeapp.generated.resources.light_off
 import kotlinx.coroutines.launch
-import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
+import me.mitkovic.kmp.currencyconverter.common.IConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.ui.common.ApplicationTitle
 import me.mitkovic.kmp.currencyconverter.ui.common.NetworkStatusIndicator
 import me.mitkovic.kmp.currencyconverter.ui.navigation.AppNavHost
@@ -49,7 +49,7 @@ fun App() {
 
     val themeValue by appViewModel.theme.collectAsStateWithLifecycle(initialValue = null)
 
-    val connectivityObserver: ConnectivityObserver = koinInject()
+    val connectivityObserver: IConnectivityObserver = koinInject()
     val networkStatus by connectivityObserver.observe().collectAsStateWithLifecycle(initialValue = null)
 
     themeValue?.let { loadedTheme ->
@@ -67,7 +67,7 @@ fun App() {
 @Composable
 fun MainScreen(
     appViewModel: AppViewModel,
-    networkStatus: ConnectivityObserver.Status?,
+    networkStatus: IConnectivityObserver.Status?,
 ) {
     val navController = rememberNavController()
     val topBarState = navController.currentTopBarState()

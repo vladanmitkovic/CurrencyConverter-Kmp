@@ -3,7 +3,7 @@ package me.mitkovic.kmp.currencyconverter.data.local.theme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ThemeDataSourceImpl : ThemeDataSource {
+class ThemeDataSourceImpl : IThemeDataSource {
 
     private val isLightModeFlow = MutableStateFlow(false)
 

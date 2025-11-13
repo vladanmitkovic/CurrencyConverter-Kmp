@@ -2,7 +2,7 @@ package me.mitkovic.kmp.currencyconverter.common
 
 import kotlinx.coroutines.flow.Flow
 
-interface ConnectivityObserver {
+interface IConnectivityObserver {
 
     fun observe(): Flow<Status>
 

@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
-import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
-import me.mitkovic.kmp.currencyconverter.logging.AppLogger
+import me.mitkovic.kmp.currencyconverter.data.repository.ICurrencyConverterRepository
+import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 
 class AppViewModel(
-    private val currencyConverterRepository: CurrencyConverterRepository,
-    private val logger: AppLogger,
+    private val currencyConverterRepository: ICurrencyConverterRepository,
+    private val logger: IAppLogger,
 ) : ViewModel() {
 
     init {

@@ -7,7 +7,7 @@ import platform.Foundation.NSUserDefaults
 
 class SelectedCurrenciesDataSourceImpl(
     private val defaults: NSUserDefaults,
-) : SelectedCurrenciesDataSource {
+) : ISelectedCurrenciesDataSource {
 
     companion object {
         private const val SELECTED_CURRENCY_LEFT_KEY = "selected_currency_left"

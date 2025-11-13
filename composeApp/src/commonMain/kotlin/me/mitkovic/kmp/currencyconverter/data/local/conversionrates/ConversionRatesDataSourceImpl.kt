@@ -14,7 +14,7 @@ import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
 open class ConversionRatesDataSourceImpl(
     private val database: CurrencyConverterDatabase,
     private val json: Json,
-) : ConversionRatesDataSource {
+) : IConversionRatesDataSource {
 
     override suspend fun saveConversionRates(response: ConversionRatesResponse) {
         val conversionRatesJson =

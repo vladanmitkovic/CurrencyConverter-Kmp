@@ -2,7 +2,7 @@ package me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies
 
 import kotlinx.coroutines.flow.Flow
 
-interface SelectedCurrenciesDataSource {
+interface ISelectedCurrenciesDataSource {
 
     suspend fun setSelectedCurrencyLeft(currencyCode: String)
 

@@ -15,19 +15,19 @@ import platform.Network.nw_path_status_unsatisfied
 import platform.darwin.DISPATCH_QUEUE_PRIORITY_DEFAULT
 import platform.darwin.dispatch_get_global_queue
 
-class ConnectivityObserverImpl : ConnectivityObserver {
+class IConnectivityObserverImpl : IConnectivityObserver {
 
-    override fun observe(): Flow<ConnectivityObserver.Status> =
+    override fun observe(): Flow<IConnectivityObserver.Status> =
         callbackFlow {
             val monitor = nw_path_monitor_create()
             nw_path_monitor_set_update_handler(monitor) { path ->
                 val status =
                     when {
                         nw_path_get_status(path) == nw_path_status_satisfied ->
-                            ConnectivityObserver.Status.Available
+                            IConnectivityObserver.Status.Available
                         nw_path_get_status(path) == nw_path_status_unsatisfied ->
-                            ConnectivityObserver.Status.Unavailable
-                        else -> ConnectivityObserver.Status.Lost
+                            IConnectivityObserver.Status.Unavailable
+                        else -> IConnectivityObserver.Status.Lost
                     }
                 trySend(status)
             }

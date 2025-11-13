@@ -31,7 +31,6 @@ import currencyconverter_kmp.composeapp.generated.resources.add_to_favorites
 import currencyconverter_kmp.composeapp.generated.resources.remove
 import currencyconverter_kmp.composeapp.generated.resources.remove_circle
 import currencyconverter_kmp.composeapp.generated.resources.your_favorites
-import me.mitkovic.kmp.currencyconverter.common.Constants.PREFERRED_CURRENCY_ORDER
 import me.mitkovic.kmp.currencyconverter.ui.theme.spacing
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -40,9 +39,7 @@ import org.jetbrains.compose.resources.stringResource
 fun FavoritesScreen(viewModel: FavoritesViewModel) {
     // Collecting the favorites list as state
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()
-
-    // Exclude favorite currencies from PREFERRED_CURRENCY_ORDER
-    val nonFavoriteCurrencies = PREFERRED_CURRENCY_ORDER.filterNot { it in favorites }
+    val nonFavoriteCurrencies by viewModel.nonFavoriteCurrencies.collectAsStateWithLifecycle()
 
     val spacing = MaterialTheme.spacing
     Column(
@@ -67,7 +64,6 @@ fun FavoritesScreen(viewModel: FavoritesViewModel) {
                 )
             }
             items(favorites) { currency ->
-
                 CurrencyItem(
                     currency = currency,
                     action = stringResource(Res.string.remove),

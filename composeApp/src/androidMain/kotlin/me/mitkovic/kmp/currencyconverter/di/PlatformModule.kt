@@ -12,27 +12,27 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserver
-import me.mitkovic.kmp.currencyconverter.common.ConnectivityObserverImpl
-import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
+import me.mitkovic.kmp.currencyconverter.common.IConnectivityObserver
+import me.mitkovic.kmp.currencyconverter.common.IConnectivityObserverImpl
+import me.mitkovic.kmp.currencyconverter.data.local.ILocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
-import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSourceImpl
-import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.SelectedCurrenciesDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.favorites.IFavoritesDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.ISelectedCurrenciesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.SelectedCurrenciesDataSourceImpl
-import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.theme.IThemeDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.theme.ThemeDataSourceImpl
-import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
+import me.mitkovic.kmp.currencyconverter.data.remote.IRemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSourceImpl
-import me.mitkovic.kmp.currencyconverter.logging.AppLogger
 import me.mitkovic.kmp.currencyconverter.logging.AppLoggerImpl
+import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 actual fun platformModule() =
     module {
-        single<AppLogger> { AppLoggerImpl() }
+        single<IAppLogger> { AppLoggerImpl() }
 
         single<DataStore<Preferences>> {
             PreferenceDataStoreFactory.create(
@@ -62,36 +62,36 @@ actual fun platformModule() =
             }
         }
 
-        single<ThemeDataSource> {
+        single<IThemeDataSource> {
             ThemeDataSourceImpl(
                 dataStore = get<DataStore<Preferences>>(),
             )
         }
 
-        single<FavoritesDataSource> {
+        single<IFavoritesDataSource> {
             FavoritesDataSourceImpl(
                 dataStore = get<DataStore<Preferences>>(),
             )
         }
 
-        single<SelectedCurrenciesDataSource> {
+        single<ISelectedCurrenciesDataSource> {
             SelectedCurrenciesDataSourceImpl(
                 dataStore = get<DataStore<Preferences>>(),
             )
         }
 
-        single<LocalDataSource> {
+        single<ILocalDataSource> {
             LocalDataSourceImpl(
                 database = get<CurrencyConverterDatabase>(),
                 json = get<Json>(),
-                theme = get<ThemeDataSource>(),
-                favorites = get<FavoritesDataSource>(),
-                selectedCurrencies = get<SelectedCurrenciesDataSource>(),
+                theme = get<IThemeDataSource>(),
+                favorites = get<IFavoritesDataSource>(),
+                selectedCurrencies = get<ISelectedCurrenciesDataSource>(),
             )
         }
 
-        single<ConnectivityObserver> {
-            ConnectivityObserverImpl(
+        single<IConnectivityObserver> {
+            IConnectivityObserverImpl(
                 context = androidContext(),
             )
         }
@@ -109,10 +109,10 @@ actual fun platformModule() =
             }
         }
 
-        single<RemoteDataSource> {
+        single<IRemoteDataSource> {
             RemoteDataSourceImpl(
                 client = get<HttpClient>(),
-                logger = get<AppLogger>(),
+                logger = get<IAppLogger>(),
             )
         }
     }
