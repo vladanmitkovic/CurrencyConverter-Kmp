@@ -5,16 +5,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.Constants
-import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepository
-import me.mitkovic.kmp.currencyconverter.logging.AppLogger
+import me.mitkovic.kmp.currencyconverter.data.repository.ICurrencyConverterRepository
+import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 
 class FavoritesViewModel(
-    private val currencyConverterRepository: CurrencyConverterRepository,
-    private val logger: AppLogger,
+    private val currencyConverterRepository: ICurrencyConverterRepository,
+    private val logger: IAppLogger,
 ) : ViewModel() {
 
     val favorites: StateFlow<List<String>> =
@@ -29,6 +30,17 @@ class FavoritesViewModel(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = Constants.PREFERRED_FAVORITES,
+            )
+
+    // Non-favorite currencies list
+    val nonFavoriteCurrencies: StateFlow<List<String>> =
+        favorites
+            .map { favoritesList ->
+                Constants.PREFERRED_CURRENCY_ORDER.filterNot { it in favoritesList }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
             )
 
     fun addFavorite(currency: String) {

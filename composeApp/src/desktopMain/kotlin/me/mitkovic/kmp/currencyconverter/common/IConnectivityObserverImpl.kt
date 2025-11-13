@@ -7,16 +7,16 @@ import kotlinx.coroutines.flow.flow
 import java.net.InetSocketAddress
 import java.net.Socket
 
-class ConnectivityObserverImpl : ConnectivityObserver {
+class IConnectivityObserverImpl : IConnectivityObserver {
 
-    override fun observe(): Flow<ConnectivityObserver.Status> =
+    override fun observe(): Flow<IConnectivityObserver.Status> =
         flow {
             while (true) {
                 val status =
                     if (isNetworkAvailable()) {
-                        ConnectivityObserver.Status.Available
+                        IConnectivityObserver.Status.Available
                     } else {
-                        ConnectivityObserver.Status.Unavailable
+                        IConnectivityObserver.Status.Unavailable
                     }
                 emit(status)
                 delay(5000) // Check every 5 seconds

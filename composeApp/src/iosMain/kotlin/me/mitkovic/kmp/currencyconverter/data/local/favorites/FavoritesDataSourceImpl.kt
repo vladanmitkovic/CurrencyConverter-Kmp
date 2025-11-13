@@ -7,7 +7,7 @@ import platform.Foundation.NSUserDefaults
 
 class FavoritesDataSourceImpl(
     private val defaults: NSUserDefaults,
-) : FavoritesDataSource {
+) : IFavoritesDataSource {
 
     companion object {
         private const val FAVORITE_CURRENCIES_KEY = "favorite_currencies"

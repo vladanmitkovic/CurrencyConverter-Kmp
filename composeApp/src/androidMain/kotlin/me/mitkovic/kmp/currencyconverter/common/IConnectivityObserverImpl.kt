@@ -9,30 +9,30 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class ConnectivityObserverImpl(
+class IConnectivityObserverImpl(
     context: Context,
-) : ConnectivityObserver {
+) : IConnectivityObserver {
 
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    override fun observe(): Flow<ConnectivityObserver.Status> =
+    override fun observe(): Flow<IConnectivityObserver.Status> =
         callbackFlow {
             val callback =
                 object : ConnectivityManager.NetworkCallback() {
                     override fun onAvailable(network: Network) {
                         super.onAvailable(network)
-                        launch { send(ConnectivityObserver.Status.Available) }
+                        launch { send(IConnectivityObserver.Status.Available) }
                     }
 
                     override fun onUnavailable() {
                         super.onUnavailable()
-                        launch { send(ConnectivityObserver.Status.Unavailable) }
+                        launch { send(IConnectivityObserver.Status.Unavailable) }
                     }
 
                     override fun onLost(network: Network) {
                         super.onLost(network)
-                        launch { send(ConnectivityObserver.Status.Lost) }
+                        launch { send(IConnectivityObserver.Status.Lost) }
                     }
                 }
 

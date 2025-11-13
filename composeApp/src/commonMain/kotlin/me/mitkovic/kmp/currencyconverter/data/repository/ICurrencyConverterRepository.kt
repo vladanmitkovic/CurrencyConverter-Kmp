@@ -5,9 +5,9 @@ import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.ISel
 import me.mitkovic.kmp.currencyconverter.data.repository.theme.IThemeRepository
 import me.mitkovic.kmp.currencyconverter.domain.repository.IConversionRatesRepository
 
-class CurrencyConverterRepositoryImpl(
-    override val conversionRatesRepository: IConversionRatesRepository,
-    override val themeRepository: IThemeRepository,
-    override val favoritesRepository: IFavoritesRepository,
-    override val selectedCurrenciesRepository: ISelectedCurrenciesRepository,
-) : ICurrencyConverterRepository
+interface ICurrencyConverterRepository {
+    val conversionRatesRepository: IConversionRatesRepository
+    val themeRepository: IThemeRepository
+    val favoritesRepository: IFavoritesRepository
+    val selectedCurrenciesRepository: ISelectedCurrenciesRepository
+}

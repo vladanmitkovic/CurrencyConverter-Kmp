@@ -3,19 +3,19 @@ package me.mitkovic.kmp.currencyconverter.data.repository.conversionrates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSource
+import me.mitkovic.kmp.currencyconverter.data.local.ILocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.model.toDomainModel
-import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSource
+import me.mitkovic.kmp.currencyconverter.data.remote.IRemoteDataSource
 import me.mitkovic.kmp.currencyconverter.domain.model.ConversionRatesResponse
-import me.mitkovic.kmp.currencyconverter.domain.repository.ConversionRatesRepository
-import me.mitkovic.kmp.currencyconverter.logging.AppLogger
+import me.mitkovic.kmp.currencyconverter.domain.repository.IConversionRatesRepository
+import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 
 class ConversionRatesRepositoryImpl(
-    private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource,
-    private val logger: AppLogger,
-) : ConversionRatesRepository {
+    private val localDataSource: ILocalDataSource,
+    private val remoteDataSource: IRemoteDataSource,
+    private val logger: IAppLogger,
+) : IConversionRatesRepository {
 
     // This method emits locally stored conversion rates.
     override fun getConversionRates(): Flow<Resource<ConversionRatesResponse?>> =
