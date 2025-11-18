@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import me.mitkovic.kmp.currencyconverter.data.local.ILocalDataSource
+import me.mitkovic.kmp.currencyconverter.data.mapper.toDomainModel
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
-import me.mitkovic.kmp.currencyconverter.data.model.toDomainModel
 import me.mitkovic.kmp.currencyconverter.data.remote.IRemoteDataSource
 import me.mitkovic.kmp.currencyconverter.domain.model.ConversionRatesResponse
 import me.mitkovic.kmp.currencyconverter.domain.repository.IConversionRatesRepository
