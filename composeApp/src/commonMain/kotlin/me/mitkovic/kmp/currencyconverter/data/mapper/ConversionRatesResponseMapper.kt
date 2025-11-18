@@ -1,5 +1,6 @@
-package me.mitkovic.kmp.currencyconverter.data.model
+package me.mitkovic.kmp.currencyconverter.data.mapper
 
+import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
 import me.mitkovic.kmp.currencyconverter.domain.model.ConversionRatesResponse as DomainConversionRatesResponse
 
 fun ConversionRatesResponse.toDomainModel(): DomainConversionRatesResponse =
