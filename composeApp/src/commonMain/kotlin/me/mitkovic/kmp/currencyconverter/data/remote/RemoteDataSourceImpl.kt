@@ -5,8 +5,8 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import me.mitkovic.kmp.currencyconverter.common.Constants
-import me.mitkovic.kmp.currencyconverter.data.model.ConversionRatesResponse
-import me.mitkovic.kmp.currencyconverter.data.model.Resource
+import me.mitkovic.kmp.currencyconverter.data.model.network.ConversionRatesResponseDto
+import me.mitkovic.kmp.currencyconverter.domain.model.Resource
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 
 class RemoteDataSourceImpl(
@@ -14,9 +14,9 @@ class RemoteDataSourceImpl(
     private val logger: IAppLogger,
 ) : IRemoteDataSource {
 
-    override suspend fun getConversionRates(): Resource<ConversionRatesResponse> {
+    override suspend fun getConversionRates(): Resource<ConversionRatesResponseDto> {
         try {
-            val resp: ConversionRatesResponse =
+            val resp: ConversionRatesResponseDto =
                 client
                     .get("${Constants.BASE_URL}/conversion_rates/rates_data.json") {
                         parameter("api_key", "apiKey")
@@ -24,7 +24,7 @@ class RemoteDataSourceImpl(
             return Resource.Success(resp)
         } catch (e: Exception) {
             logger.logError("RemoteDataSource", e.message, e)
-            return Resource.Error(e.message ?: "Unknown error", throwable = e)
+            return Resource.Error(message = e.message ?: "Unknown error", exception = e)
         }
     }
 }
