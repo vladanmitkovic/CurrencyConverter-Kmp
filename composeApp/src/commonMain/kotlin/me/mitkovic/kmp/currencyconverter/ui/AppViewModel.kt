@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.Constants
-import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.repository.ICurrencyConverterRepository
+import me.mitkovic.kmp.currencyconverter.domain.model.Resource
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 
 class AppViewModel(
@@ -54,7 +54,7 @@ class AppViewModel(
                 }
                 is Resource.Error -> {
                     val errorMessage = "${Constants.ERROR_FETCHING_CONVERSION_RATES}: ${result.message}"
-                    result.message.let {
+                    result.message?.let {
                         logger.logError(AppViewModel::class.simpleName, errorMessage, Exception(it))
                     }
                 }

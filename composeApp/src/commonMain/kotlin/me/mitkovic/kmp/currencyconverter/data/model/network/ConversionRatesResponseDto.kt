@@ -1,9 +1,9 @@
-package me.mitkovic.kmp.currencyconverter.data.model
+package me.mitkovic.kmp.currencyconverter.data.model.network
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ConversionRatesResponse(
+data class ConversionRatesResponseDto(
     val timestamp: Long,
     val conversion_rates: Map<String, Double>,
 )
