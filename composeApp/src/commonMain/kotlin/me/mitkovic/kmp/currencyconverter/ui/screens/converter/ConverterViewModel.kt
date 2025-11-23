@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.common.Constants.SOMETHING_WENT_WRONG
-import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.repository.ICurrencyConverterRepository
+import me.mitkovic.kmp.currencyconverter.domain.model.Resource
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyConversionUtil
 
@@ -64,10 +64,10 @@ class ConverterViewModel(
             .conversionRatesRepository
             .getConversionRates()
             .onStart {
-                emit(Resource.Loading)
+                emit(Resource.Loading())
             }.catch { e ->
                 logger.logError(ConverterViewModel::class.simpleName, "Error fetching rates", e)
-                emit(Resource.Error(e.message ?: SOMETHING_WENT_WRONG))
+                emit(Resource.Error(message = e.message ?: SOMETHING_WENT_WRONG, exception = e))
             }.map { resource ->
                 when (resource) {
                     is Resource.Success ->
@@ -77,7 +77,7 @@ class ConverterViewModel(
                         )
                     is Resource.Error ->
                         ConversionRatesUiState.Error(
-                            error = resource.message,
+                            error = resource.message ?: "Unknown error",
                         )
                     is Resource.Loading ->
                         ConversionRatesUiState.Loading
@@ -94,31 +94,25 @@ class ConverterViewModel(
         logger.logDebug(ConverterViewModel::class.simpleName, "refreshConversionRates invoked")
         viewModelScope.launch {
             _refreshRatesUiState.value = ConversionRatesUiState.Loading
-            try {
-                val resource =
-                    currencyConverterRepository
-                        .conversionRatesRepository
-                        .refreshConversionRates()
-                _refreshRatesUiState.value =
-                    when (resource) {
-                        is Resource.Success ->
-                            ConversionRatesUiState.Success(
-                                rates = resource.data?.conversion_rates ?: emptyMap(),
-                                timestamp = resource.data?.timestamp,
-                            )
-                        is Resource.Error ->
-                            ConversionRatesUiState.Error(
-                                error = resource.message,
-                            )
-                        is Resource.Loading ->
-                            ConversionRatesUiState.Loading
-                    }
-            } catch (e: Exception) {
-                _refreshRatesUiState.value =
-                    ConversionRatesUiState.Error(
-                        error = e.message ?: "Unknown error",
-                    )
-            }
+
+            val resource =
+                currencyConverterRepository
+                    .conversionRatesRepository
+                    .refreshConversionRates()
+            _refreshRatesUiState.value =
+                when (resource) {
+                    is Resource.Success ->
+                        ConversionRatesUiState.Success(
+                            rates = resource.data?.conversion_rates ?: emptyMap(),
+                            timestamp = resource.data?.timestamp,
+                        )
+                    is Resource.Error ->
+                        ConversionRatesUiState.Error(
+                            error = resource.message ?: "Unknown error",
+                        )
+                    is Resource.Loading ->
+                        ConversionRatesUiState.Loading
+                }
         }
     }
 
