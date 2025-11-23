@@ -2,7 +2,7 @@ package me.mitkovic.kmp.currencyconverter.logging
 
 import timber.log.Timber
 
-class AppLoggerImpl : IAppLogger {
+actual class AppLoggerImpl : IAppLogger {
 
     override fun logDebug(
         tag: String?,

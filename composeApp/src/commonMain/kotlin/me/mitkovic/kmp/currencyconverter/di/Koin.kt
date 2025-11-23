@@ -1,5 +1,6 @@
 package me.mitkovic.kmp.currencyconverter.di
 
+import kotlinx.serialization.json.Json // ✅ ADDED: Import for Json
 import me.mitkovic.kmp.currencyconverter.data.local.ILocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.IRemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.repository.CurrencyConverterRepositoryImpl
@@ -12,6 +13,7 @@ import me.mitkovic.kmp.currencyconverter.data.repository.selectedcurrencies.Sele
 import me.mitkovic.kmp.currencyconverter.data.repository.theme.IThemeRepository
 import me.mitkovic.kmp.currencyconverter.data.repository.theme.ThemeRepositoryImpl
 import me.mitkovic.kmp.currencyconverter.domain.repository.IConversionRatesRepository
+import me.mitkovic.kmp.currencyconverter.logging.AppLoggerImpl
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 import me.mitkovic.kmp.currencyconverter.platform.Platform
 import me.mitkovic.kmp.currencyconverter.platform.getPlatform
@@ -24,6 +26,16 @@ val commonModule =
     module {
 
         single<Platform> { getPlatform() }
+
+        single<IAppLogger> { AppLoggerImpl() }
+
+        single {
+            Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+            }
+        }
 
         single<IConversionRatesRepository> {
             ConversionRatesRepositoryImpl(
