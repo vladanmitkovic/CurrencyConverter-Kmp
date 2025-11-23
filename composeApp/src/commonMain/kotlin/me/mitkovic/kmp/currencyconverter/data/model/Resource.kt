@@ -1,16 +1,21 @@
-package me.mitkovic.kmp.currencyconverter.data.model
+package me.mitkovic.kmp.currencyconverter.domain.model
 
-sealed class Resource<out T> {
+sealed class Resource<T>(
+    val data: T? = null,
+    val message: String? = null,
+    val exception: Throwable? = null,
+) {
+    class Success<T>(
+        data: T?,
+    ) : Resource<T>(data)
 
-    object Loading : Resource<Nothing>()
+    class Loading<T>(
+        data: T? = null,
+    ) : Resource<T>(data)
 
-    data class Success<T>(
-        val data: T,
-    ) : Resource<T>()
-
-    data class Error(
-        val message: String,
-        val throwable: Throwable? = null,
-        val code: Int? = null,
-    ) : Resource<Nothing>()
+    class Error<T>(
+        message: String,
+        data: T? = null,
+        exception: Throwable? = null,
+    ) : Resource<T>(data, message, exception)
 }
