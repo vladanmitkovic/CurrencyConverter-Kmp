@@ -16,7 +16,7 @@ class AppViewModel(
 ) : ViewModel() {
 
     init {
-        logger.logError(AppViewModel::class.simpleName, "AppViewModel", null)
+        logger.logDebug(AppViewModel::class.simpleName, "AppViewModel")
         fetchConversionRates()
     }
 
@@ -30,16 +30,18 @@ class AppViewModel(
                 initialValue = null, // No default theme until loaded
             )
 
-    fun updateTheme(isDarkMode: Boolean) {
+    fun updateTheme(isLightMode: Boolean) {
         viewModelScope.launch {
             currencyConverterRepository
                 .themeRepository
-                .saveTheme(isDarkMode)
+                .saveTheme(isLightMode)
         }
     }
 
     fun toggleTheme() {
-        theme.value?.let { updateTheme(!it) }
+        theme.value?.let { isLightMode ->
+            updateTheme(!isLightMode)
+        }
     }
 
     fun fetchConversionRates() {

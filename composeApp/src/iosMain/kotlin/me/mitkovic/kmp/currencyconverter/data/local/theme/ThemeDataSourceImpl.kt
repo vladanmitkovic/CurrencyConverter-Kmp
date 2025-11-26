@@ -8,7 +8,7 @@ class ThemeDataSourceImpl(
     private val defaults: NSUserDefaults,
 ) : IThemeDataSource {
 
-    private val THEME_KEY = "is_dark_mode"
+    private val THEME_KEY = "is_light_mode"
     private val isLightModeFlow = MutableStateFlow(defaults.boolForKey(THEME_KEY))
 
     override suspend fun saveTheme(isLightMode: Boolean) {
