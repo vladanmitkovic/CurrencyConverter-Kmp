@@ -7,8 +7,8 @@ class ThemeRepositoryImpl(
     private val localDataSource: ILocalDataSource,
 ) : IThemeRepository {
 
-    override suspend fun saveTheme(isDarkMode: Boolean) {
-        localDataSource.theme.saveTheme(isDarkMode)
+    override suspend fun saveTheme(isLightMode: Boolean) {
+        localDataSource.theme.saveTheme(isLightMode = isLightMode)
     }
 
     override fun getTheme(): Flow<Boolean> = localDataSource.theme.getTheme()
