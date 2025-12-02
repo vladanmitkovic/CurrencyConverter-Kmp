@@ -5,26 +5,39 @@ import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 import me.mitkovic.kmp.currencyconverter.ui.AppViewModel
 import me.mitkovic.kmp.currencyconverter.ui.screens.converter.ConverterViewModel
 import me.mitkovic.kmp.currencyconverter.ui.screens.favorites.FavoritesViewModel
-import org.koin.dsl.module
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Module
 
-val viewModelModule =
-    module {
-        factory {
-            AppViewModel(
-                currencyConverterRepository = get<ICurrencyConverterRepository>(),
-                logger = get<IAppLogger>(),
-            )
-        }
-        factory {
-            ConverterViewModel(
-                currencyConverterRepository = get<ICurrencyConverterRepository>(),
-                logger = get<IAppLogger>(),
-            )
-        }
-        factory {
-            FavoritesViewModel(
-                currencyConverterRepository = get<ICurrencyConverterRepository>(),
-                logger = get<IAppLogger>(),
-            )
-        }
-    }
+@Module
+class ViewModelModule {
+
+    @Factory
+    fun provideAppViewModel(
+        currencyConverterRepository: ICurrencyConverterRepository,
+        logger: IAppLogger,
+    ): AppViewModel =
+        AppViewModel(
+            currencyConverterRepository = currencyConverterRepository,
+            logger = logger,
+        )
+
+    @Factory
+    fun provideConverterViewModel(
+        currencyConverterRepository: ICurrencyConverterRepository,
+        logger: IAppLogger,
+    ): ConverterViewModel =
+        ConverterViewModel(
+            currencyConverterRepository = currencyConverterRepository,
+            logger = logger,
+        )
+
+    @Factory
+    fun provideFavoritesViewModel(
+        currencyConverterRepository: ICurrencyConverterRepository,
+        logger: IAppLogger,
+    ): FavoritesViewModel =
+        FavoritesViewModel(
+            currencyConverterRepository = currencyConverterRepository,
+            logger = logger,
+        )
+}
