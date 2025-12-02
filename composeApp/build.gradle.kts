@@ -1,5 +1,7 @@
+import com.google.devtools.ksp.gradle.KspAATask
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +10,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -56,13 +59,14 @@ kotlin {
             // Koin
             implementation(libs.koin.core)
             implementation(libs.koin.composeVM)
+            implementation(libs.koin.annotations)
 
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
 
             // SQLDelight
             implementation(libs.sqldelight.runtime)
-            api(libs.sqldelight.coroutines)
+            implementation(libs.sqldelight.coroutines)
 
             // Serialization
             implementation(libs.kotlinx.serialization.json)
@@ -99,8 +103,6 @@ kotlin {
         }
 
         iosMain.dependencies {
-            implementation(libs.koin.core)
-
             // Ktor engine for iOS
             implementation(libs.ktor.client.darwin)
 
@@ -111,13 +113,17 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.koin.core)
 
             // Ktor engine for Desktop
             implementation(libs.ktor.client.cio)
 
             // SQLDelight SQLite driver
             implementation(libs.sqldelight.sqlite.driver)
+        }
+
+        // KSP generated sources
+        sourceSets.named("commonMain").configure {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
         }
     }
 }
@@ -164,6 +170,13 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+
+    add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+    add("kspAndroid", libs.koin.ksp.compiler)
+    add("kspIosX64", libs.koin.ksp.compiler)
+    add("kspIosArm64", libs.koin.ksp.compiler)
+    add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
+    add("kspDesktop", libs.koin.ksp.compiler)
 }
 
 compose.desktop {
@@ -186,5 +199,19 @@ sqldelight {
         create("CurrencyConverterDatabase") {
             packageName.set("me.mitkovic.kmp.currencyconverter.data.local.database")
         }
+    }
+}
+
+// Make Kotlin compilation depend on KSP metadata
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+// KSP task dependencies - ensure proper ordering
+tasks.withType<KspAATask>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
     }
 }
