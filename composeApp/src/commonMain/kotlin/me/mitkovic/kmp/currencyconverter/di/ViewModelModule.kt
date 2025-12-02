@@ -7,14 +7,15 @@ import me.mitkovic.kmp.currencyconverter.ui.screens.converter.ConverterViewModel
 import me.mitkovic.kmp.currencyconverter.ui.screens.favorites.FavoritesViewModel
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
+import org.koin.core.annotation.Provided
 
 @Module
 class ViewModelModule {
 
     @Factory
     fun provideAppViewModel(
-        currencyConverterRepository: ICurrencyConverterRepository,
-        logger: IAppLogger,
+        @Provided currencyConverterRepository: ICurrencyConverterRepository,
+        @Provided logger: IAppLogger,
     ): AppViewModel =
         AppViewModel(
             currencyConverterRepository = currencyConverterRepository,
@@ -23,8 +24,8 @@ class ViewModelModule {
 
     @Factory
     fun provideConverterViewModel(
-        currencyConverterRepository: ICurrencyConverterRepository,
-        logger: IAppLogger,
+        @Provided currencyConverterRepository: ICurrencyConverterRepository,
+        @Provided logger: IAppLogger,
     ): ConverterViewModel =
         ConverterViewModel(
             currencyConverterRepository = currencyConverterRepository,
@@ -33,8 +34,8 @@ class ViewModelModule {
 
     @Factory
     fun provideFavoritesViewModel(
-        currencyConverterRepository: ICurrencyConverterRepository,
-        logger: IAppLogger,
+        @Provided currencyConverterRepository: ICurrencyConverterRepository,
+        @Provided logger: IAppLogger,
     ): FavoritesViewModel =
         FavoritesViewModel(
             currencyConverterRepository = currencyConverterRepository,
