@@ -18,6 +18,7 @@ import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 import me.mitkovic.kmp.currencyconverter.platform.Platform
 import me.mitkovic.kmp.currencyconverter.platform.getPlatform
 import org.koin.core.annotation.Module
+import org.koin.core.annotation.Provided
 import org.koin.core.annotation.Single
 
 @Module
@@ -39,8 +40,8 @@ class AppModule {
 
     @Single
     fun provideConversionRatesRepository(
-        localDataSource: ILocalDataSource,
-        remoteDataSource: IRemoteDataSource,
+        @Provided localDataSource: ILocalDataSource,
+        @Provided remoteDataSource: IRemoteDataSource,
         logger: IAppLogger,
     ): IConversionRatesRepository =
         ConversionRatesRepositoryImpl(
@@ -50,19 +51,25 @@ class AppModule {
         )
 
     @Single
-    fun provideThemeRepository(localDataSource: ILocalDataSource): IThemeRepository =
+    fun provideThemeRepository(
+        @Provided localDataSource: ILocalDataSource,
+    ): IThemeRepository =
         ThemeRepositoryImpl(
             localDataSource = localDataSource,
         )
 
     @Single
-    fun provideFavoritesRepository(localDataSource: ILocalDataSource): IFavoritesRepository =
+    fun provideFavoritesRepository(
+        @Provided localDataSource: ILocalDataSource,
+    ): IFavoritesRepository =
         FavoritesRepositoryImpl(
             localDataSource = localDataSource,
         )
 
     @Single
-    fun provideSelectedCurrenciesRepository(localDataSource: ILocalDataSource): ISelectedCurrenciesRepository =
+    fun provideSelectedCurrenciesRepository(
+        @Provided localDataSource: ILocalDataSource,
+    ): ISelectedCurrenciesRepository =
         SelectedCurrenciesRepositoryImpl(
             localDataSource = localDataSource,
         )
