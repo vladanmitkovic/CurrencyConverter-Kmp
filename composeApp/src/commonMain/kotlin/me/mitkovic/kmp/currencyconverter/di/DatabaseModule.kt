@@ -15,12 +15,16 @@ import me.mitkovic.kmp.currencyconverter.data.remote.IRemoteDataSource
 import me.mitkovic.kmp.currencyconverter.data.remote.RemoteDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 import org.koin.core.annotation.Module
+import org.koin.core.annotation.Provided
 import org.koin.core.annotation.Single
 
 @Module
 class DatabaseModule {
+
     @Single
-    fun provideDatabase(driver: SqlDriver): CurrencyConverterDatabase =
+    fun provideDatabase(
+        @Provided driver: SqlDriver,
+    ): CurrencyConverterDatabase =
         CurrencyConverterDatabase(
             driver = driver,
         )
@@ -28,7 +32,7 @@ class DatabaseModule {
     @Single
     fun provideConversionRatesDataSource(
         database: CurrencyConverterDatabase,
-        json: Json,
+        @Provided json: Json,
     ): IConversionRatesDataSource =
         ConversionRatesDataSourceImpl(
             database = database,
@@ -38,9 +42,9 @@ class DatabaseModule {
     @Single
     fun provideLocalDataSource(
         conversionRates: IConversionRatesDataSource,
-        theme: IThemeDataSource,
-        favorites: IFavoritesDataSource,
-        selectedCurrencies: ISelectedCurrenciesDataSource,
+        @Provided theme: IThemeDataSource,
+        @Provided favorites: IFavoritesDataSource,
+        @Provided selectedCurrencies: ISelectedCurrenciesDataSource,
     ): ILocalDataSource =
         LocalDataSourceImpl(
             conversionRates = conversionRates,
@@ -51,8 +55,8 @@ class DatabaseModule {
 
     @Single
     fun provideRemoteDataSource(
-        client: HttpClient,
-        logger: IAppLogger,
+        @Provided client: HttpClient,
+        @Provided logger: IAppLogger,
     ): IRemoteDataSource =
         RemoteDataSourceImpl(
             client = client,

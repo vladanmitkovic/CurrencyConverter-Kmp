@@ -202,6 +202,10 @@ sqldelight {
     }
 }
 
+ksp {
+    arg("KOIN_CONFIG_CHECK", "true")
+}
+
 // Make Kotlin compilation depend on KSP metadata
 tasks.withType<KotlinCompilationTask<*>>().configureEach {
     if (name != "kspCommonMainKotlinMetadata") {
