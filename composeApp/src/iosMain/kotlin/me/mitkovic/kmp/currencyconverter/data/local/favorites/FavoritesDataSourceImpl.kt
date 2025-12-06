@@ -13,7 +13,7 @@ class FavoritesDataSourceImpl(
         private const val FAVORITE_CURRENCIES_KEY = "favorite_currencies"
     }
 
-    private val favoritesFlow = MutableStateFlow<List<String>>(Constants.PREFERRED_FAVORITES)
+    private val favoritesFlow = MutableStateFlow(Constants.PREFERRED_FAVORITES)
 
     init {
         defaults.stringForKey(FAVORITE_CURRENCIES_KEY)?.let { stored ->
