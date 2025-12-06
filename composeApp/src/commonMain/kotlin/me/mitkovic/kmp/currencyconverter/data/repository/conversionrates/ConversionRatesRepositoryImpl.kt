@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import me.mitkovic.kmp.currencyconverter.data.local.ILocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.mapper.toDomain
+import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.remote.IRemoteDataSource
 import me.mitkovic.kmp.currencyconverter.domain.model.ConversionRatesResponse
-import me.mitkovic.kmp.currencyconverter.domain.model.Resource
 import me.mitkovic.kmp.currencyconverter.domain.repository.IConversionRatesRepository
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 
@@ -34,8 +34,7 @@ class ConversionRatesRepositoryImpl(
 
     override suspend fun refreshConversionRates(): Resource<ConversionRatesResponse?> =
         try {
-            val remoteResult = remoteDataSource.getConversionRates()
-            when (remoteResult) {
+            when (val remoteResult = remoteDataSource.getConversionRates()) {
                 is Resource.Success -> {
                     val responseDto = remoteResult.data
                     if (responseDto != null) {
@@ -50,6 +49,7 @@ class ConversionRatesRepositoryImpl(
                         Resource.Error("Empty response from server")
                     }
                 }
+
                 is Resource.Error -> {
                     logger.logError(
                         ConversionRatesRepositoryImpl::class.simpleName,
@@ -61,6 +61,7 @@ class ConversionRatesRepositoryImpl(
                         exception = remoteResult.exception,
                     )
                 }
+
                 is Resource.Loading -> {
                     Resource.Error("Unexpected state from remote")
                 }
