@@ -5,8 +5,8 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import me.mitkovic.kmp.currencyconverter.common.Constants
+import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.model.network.ConversionRatesResponseDto
-import me.mitkovic.kmp.currencyconverter.domain.model.Resource
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 
 class RemoteDataSourceImpl(

@@ -17,22 +17,22 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.common.Constants.SOMETHING_WENT_WRONG
+import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.repository.ICurrencyConverterRepository
-import me.mitkovic.kmp.currencyconverter.domain.model.Resource
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
 import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyConversionUtil
 
-sealed class ConversionRatesUiState {
-    object Loading : ConversionRatesUiState()
+sealed interface ConversionRatesUiState {
+    object Loading : ConversionRatesUiState
 
     data class Success(
         val rates: Map<String, Double>,
         val timestamp: Long?,
-    ) : ConversionRatesUiState()
+    ) : ConversionRatesUiState
 
     data class Error(
         val error: String,
-    ) : ConversionRatesUiState()
+    ) : ConversionRatesUiState
 }
 
 class ConverterViewModel(
@@ -70,17 +70,22 @@ class ConverterViewModel(
                 emit(Resource.Error(message = e.message ?: SOMETHING_WENT_WRONG, exception = e))
             }.map { resource ->
                 when (resource) {
-                    is Resource.Success ->
+                    is Resource.Success -> {
                         ConversionRatesUiState.Success(
                             rates = resource.data?.conversion_rates ?: emptyMap(),
                             timestamp = resource.data?.timestamp,
                         )
-                    is Resource.Error ->
+                    }
+
+                    is Resource.Error -> {
                         ConversionRatesUiState.Error(
                             error = resource.message ?: "Unknown error",
                         )
-                    is Resource.Loading ->
+                    }
+
+                    is Resource.Loading -> {
                         ConversionRatesUiState.Loading
+                    }
                 }
             }.onEach { uiState ->
                 logger.logDebug(ConverterViewModel::class.simpleName, "UI state updated: $uiState")
@@ -101,17 +106,22 @@ class ConverterViewModel(
                     .refreshConversionRates()
             _refreshRatesUiState.value =
                 when (resource) {
-                    is Resource.Success ->
+                    is Resource.Success -> {
                         ConversionRatesUiState.Success(
                             rates = resource.data?.conversion_rates ?: emptyMap(),
                             timestamp = resource.data?.timestamp,
                         )
-                    is Resource.Error ->
+                    }
+
+                    is Resource.Error -> {
                         ConversionRatesUiState.Error(
                             error = resource.message ?: "Unknown error",
                         )
-                    is Resource.Loading ->
+                    }
+
+                    is Resource.Loading -> {
                         ConversionRatesUiState.Loading
+                    }
                 }
         }
     }
