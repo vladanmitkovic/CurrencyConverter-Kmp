@@ -1,4 +1,4 @@
-package me.mitkovic.kmp.currencyconverter.domain.model
+package me.mitkovic.kmp.currencyconverter.data.model
 
 sealed class Resource<T>(
     val data: T? = null,
