@@ -28,7 +28,7 @@ fun ConversionRatesResponse.toDto(): ConversionRatesResponseDto =
     )
 
 // ============================================
-// Entity (SQLDelight) -> Domain
+// Entity (Room) -> Domain
 // ============================================
 
 fun ConversionRatesEntity.toDomain(json: Json): ConversionRatesResponse =
@@ -42,7 +42,7 @@ fun ConversionRatesEntity.toDomain(json: Json): ConversionRatesResponse =
     )
 
 // ============================================
-// Domain -> Entity JSON String (for SQLDelight insertion)
+// Domain -> Entity JSON String (for DB insertion)
 // ============================================
 
 fun ConversionRatesResponse.toEntityJsonString(json: Json): String =

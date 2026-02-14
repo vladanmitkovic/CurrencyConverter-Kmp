@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.sqldelight)
+    alias(libs.plugins.androidx.room)
     alias(libs.plugins.ksp)
 }
 
@@ -82,9 +82,9 @@ kotlin {
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
 
-            // SQLDelight
-            implementation(libs.sqldelight.runtime)
-            implementation(libs.sqldelight.coroutines)
+            // Room
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
 
             // Serialization
             implementation(libs.kotlinx.serialization.json)
@@ -103,8 +103,6 @@ kotlin {
             implementation(libs.androidx.datastore.core)
             // Timber
             implementation(libs.timber)
-            // SQLDelight Android driver
-            implementation(libs.sqldelight.android.driver)
 
             // Ktor engine + logging
             implementation(libs.ktor.client.okhttp)
@@ -114,9 +112,6 @@ kotlin {
         iosMain.dependencies {
             // Ktor engine for iOS
             implementation(libs.ktor.client.darwin)
-
-            // SQLDelight native driver
-            implementation(libs.sqldelight.native.driver)
         }
 
         desktopMain.dependencies {
@@ -125,9 +120,6 @@ kotlin {
 
             // Ktor engine for Desktop
             implementation(libs.ktor.client.cio)
-
-            // SQLDelight SQLite driver
-            implementation(libs.sqldelight.sqlite.driver)
         }
 
         // KSP generated sources
@@ -141,10 +133,17 @@ dependencies {
     androidRuntimeClasspath(libs.compose.ui.tooling)
 
     add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+    add("kspAndroid", libs.koin.ksp.compiler)
     add("kspIosX64", libs.koin.ksp.compiler)
     add("kspIosArm64", libs.koin.ksp.compiler)
     add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
     add("kspDesktop", libs.koin.ksp.compiler)
+
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspDesktop", libs.androidx.room.compiler)
 }
 
 compose.desktop {
@@ -161,13 +160,8 @@ compose.desktop {
     }
 }
 
-// SQLDelight configuration
-sqldelight {
-    databases {
-        create("CurrencyConverterDatabase") {
-            packageName.set("me.mitkovic.kmp.currencyconverter.data.local.database")
-        }
-    }
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 ksp {
