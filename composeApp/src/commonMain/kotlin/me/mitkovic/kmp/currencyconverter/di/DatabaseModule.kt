@@ -1,13 +1,16 @@
 package me.mitkovic.kmp.currencyconverter.di
 
-import app.cash.sqldelight.db.SqlDriver
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import io.ktor.client.HttpClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.serialization.json.Json
 import me.mitkovic.kmp.currencyconverter.data.local.ILocalDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.LocalDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.conversionrates.ConversionRatesDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.conversionrates.IConversionRatesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
+import me.mitkovic.kmp.currencyconverter.data.local.database.DatabaseFactory
 import me.mitkovic.kmp.currencyconverter.data.local.favorites.IFavoritesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.ISelectedCurrenciesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.theme.IThemeDataSource
@@ -23,11 +26,12 @@ class DatabaseModule {
 
     @Single
     fun provideDatabase(
-        @Provided driver: SqlDriver,
+        @Provided factory: DatabaseFactory,
     ): CurrencyConverterDatabase =
-        CurrencyConverterDatabase(
-            driver = driver,
-        )
+        factory.create()
+            .setDriver(BundledSQLiteDriver())
+            .setQueryCoroutineContext(Dispatchers.IO)
+            .build()
 
     @Single
     fun provideConversionRatesDataSource(
