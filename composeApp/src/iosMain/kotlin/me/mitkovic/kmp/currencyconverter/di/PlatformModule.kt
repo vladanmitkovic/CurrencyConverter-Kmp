@@ -1,13 +1,11 @@
 package me.mitkovic.kmp.currencyconverter.di
 
-import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import kotlinx.serialization.json.Json
 import me.mitkovic.kmp.currencyconverter.common.IConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.IConnectivityObserverImpl
-import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
+import me.mitkovic.kmp.currencyconverter.data.local.database.DatabaseFactory
 import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.favorites.IFavoritesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.ISelectedCurrenciesDataSource
@@ -24,11 +22,8 @@ actual fun platformModule() =
             NSUserDefaults.standardUserDefaults()
         }
 
-        single<SqlDriver> {
-            NativeSqliteDriver(
-                schema = CurrencyConverterDatabase.Schema,
-                name = "currency_converter.db",
-            )
+        single<DatabaseFactory> {
+            DatabaseFactory()
         }
 
         single<IThemeDataSource> {

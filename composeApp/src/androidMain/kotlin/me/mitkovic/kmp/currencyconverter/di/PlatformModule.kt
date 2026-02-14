@@ -4,14 +4,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import kotlinx.serialization.json.Json
 import me.mitkovic.kmp.currencyconverter.common.IConnectivityObserver
 import me.mitkovic.kmp.currencyconverter.common.IConnectivityObserverImpl
-import me.mitkovic.kmp.currencyconverter.data.local.database.CurrencyConverterDatabase
+import me.mitkovic.kmp.currencyconverter.data.local.database.DatabaseFactory
 import me.mitkovic.kmp.currencyconverter.data.local.favorites.FavoritesDataSourceImpl
 import me.mitkovic.kmp.currencyconverter.data.local.favorites.IFavoritesDataSource
 import me.mitkovic.kmp.currencyconverter.data.local.selectedcurrencies.ISelectedCurrenciesDataSource
@@ -30,11 +28,9 @@ actual fun platformModule() =
             )
         }
 
-        single<SqlDriver> {
-            AndroidSqliteDriver(
-                CurrencyConverterDatabase.Schema,
+        single<DatabaseFactory> {
+            DatabaseFactory(
                 context = androidContext(),
-                name = "currency_converter.db",
             )
         }
 

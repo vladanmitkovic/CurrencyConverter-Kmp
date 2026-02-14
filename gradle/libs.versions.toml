@@ -1,25 +1,47 @@
 [versions]
-agp = "9.0.0"
+# Android (Gradle + SDK levels)
+agp = "9.0.1"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
-androidx-activityCompose = "1.12.4"
-androidx-lifecycle = "2.9.6"
+
+# Kotlin + KSP
+kotlin = "2.3.10"
+ksp = "2.3.5"
+
+# Compose / UI
 compose-multiplatform = "1.10.1"
 compose-material3 = "1.10.0-alpha05"
 compose-material-iconsExtended = "1.7.3"
-kotlin = "2.3.10"
-ksp = "2.3.5"
+androidx-activityCompose = "1.12.4"
+
+# AndroidX Compose (preview/tooling)
+compose-androidx = "1.10.3"
+
+# AndroidX (Lifecycle + Navigation)
+androidx-lifecycle = "2.9.6"
+androidx-navigation = "2.9.2"
+
+# Coroutines + Serialization
 kotlinx-coroutines = "1.10.2"
 kotlinxSerializationJson = "1.10.0"
+
+# DI
 koin = "4.1.1"
 koin-annotations = "2.3.1"
-timber = "5.0.1"
+
+# Storage / Logging
 datastore = "1.2.0"
+timber = "5.0.1"
+
+# Networking
 ktor = "3.4.0"
 okhttp = "5.3.2"
-sqldelight = "2.2.1"
-androidx-navigation = "2.9.2"
+
+# Database (Room KMP)
+room = "2.8.4"
+sqlite = "2.6.2"
+
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -54,13 +76,6 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
-# Sqldelight
-sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
-sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
-sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
-sqldelight-sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
-sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
-
 # Navigation
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 
@@ -71,12 +86,16 @@ compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-mu
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
 compose-components-uiToolingPreview = { module = "org.jetbrains.compose.components:components-ui-tooling-preview", version.ref = "compose-multiplatform" }
 compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-multiplatform" }
-
 compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
 compose-material-iconsExtended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "compose-material-iconsExtended" }
 
 # Android Compose tooling preview
-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version = "1.10.3" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-androidx" }
+
+# Room
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -85,6 +104,8 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-mu
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+
+# Room
+androidx-room = { id = "androidx.room", version.ref = "room" }
