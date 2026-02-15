@@ -63,8 +63,16 @@ fun ConverterScreen(
     val uiState = viewModel.conversionRatesUiState.collectAsStateWithLifecycle()
     val state = uiState.value
 
+    // Log the UI state whenever it changes (pretty-printed for readability)
     LaunchedEffect(state) {
-        viewModel.logMessage("state: $state")
+        val pretty =
+            when (state) {
+                ConversionRatesUiState.Loading -> "Loading"
+                is ConversionRatesUiState.Success -> "Success(rates=${state.rates}, timestamp=${state.timestamp})"
+                is ConversionRatesUiState.Error -> "Error(${state.error})"
+            }
+
+        viewModel.logMessage("state: $pretty")
     }
 
     val refreshState by viewModel.refreshRatesUiState.collectAsStateWithLifecycle()

@@ -22,19 +22,13 @@ kotlin {
 
     androidLibrary {
         namespace = "me.mitkovic.kmp.currencyconverter.shared"
-        compileSdk =
-            libs.versions.android.compileSdk
-                .get()
-                .toInt()
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
 
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
 
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         // Enable Android resources for the shared module (needed for Compose Multiplatform)
         androidResources {
@@ -69,10 +63,9 @@ kotlin {
             implementation(libs.compose.components.uiToolingPreview)
             implementation(libs.compose.material.iconsExtended)
 
-            // AndroidX & Lifecycle
+            // Lifecycle (KMP)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.androidx.navigation.compose)
 
             // Koin
             implementation(libs.koin.core)
@@ -93,6 +86,10 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+
+            // Nav3 (KMP) - UI ONLY
+            implementation(libs.navigation3.ui)
+            implementation(libs.lifecycle.viewmodel.navigation3)
         }
 
         androidMain.dependencies {

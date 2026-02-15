@@ -4,14 +4,14 @@ import platform.Foundation.NSLog
 
 actual class AppLoggerImpl : IAppLogger {
 
-    override fun logDebug(
+    actual override fun logDebug(
         tag: String?,
         message: String,
     ) {
         NSLog("${tag ?: "Debug"}: $message")
     }
 
-    override fun logError(
+    actual override fun logError(
         tag: String?,
         message: String?,
         throwable: Throwable?,
