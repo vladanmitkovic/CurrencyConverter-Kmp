@@ -18,9 +18,13 @@ androidx-activityCompose = "1.12.4"
 # AndroidX Compose (preview/tooling)
 compose-androidx = "1.10.3"
 
-# AndroidX (Lifecycle + Navigation)
-androidx-lifecycle = "2.9.6"
-androidx-navigation = "2.9.2"
+# Lifecycle (KMP)
+# version 2.10.0-alpha06 work fine with  iosX64() but 2.10.0-alpha08 don't
+# I had to comment that code in build.gradle.kts
+androidx-lifecycle = "2.10.0-alpha06"
+
+# Navigation 3 (KMP)
+navigation3 = "1.0.0-alpha06"
 
 # Coroutines + Serialization
 kotlinx-coroutines = "1.10.2"
@@ -42,11 +46,13 @@ okhttp = "5.3.2"
 room = "2.8.4"
 sqlite = "2.6.2"
 
-
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+# Lifecycle (KMP)
+androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
 
 # Kotlinx
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -76,8 +82,8 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
-# Navigation
-androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+# Nav3 (KMP) - UI ONLY (NO runtime artifact here)
+navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 
 # Compose Multiplatform
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
