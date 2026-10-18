@@ -1,5 +1,4 @@
 import com.google.devtools.ksp.gradle.KspAATask
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
@@ -112,9 +111,6 @@ kotlin {
         }
 
         desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
-
             // Ktor engine for Desktop
             implementation(libs.ktor.client.cio)
         }
@@ -141,20 +137,6 @@ dependencies {
     add("kspIosArm64", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspDesktop", libs.androidx.room.compiler)
-}
-
-compose.desktop {
-    application {
-        mainClass = "me.mitkovic.kmp.currencyconverter.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "me.mitkovic.kmp.currencyconverter"
-            packageVersion = "1.0.0"
-
-            modules("java.sql")
-        }
-    }
 }
 
 room {
