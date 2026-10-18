@@ -19,7 +19,7 @@ kotlin {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
-    androidLibrary {
+    android {
         namespace = "me.mitkovic.kmp.currencyconverter.shared"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
 
