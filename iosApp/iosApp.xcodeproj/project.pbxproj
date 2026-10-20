@@ -161,6 +161,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		F36B1CEB2AD83DDC00CB74D5 /* Compile Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -323,7 +324,7 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)\n$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+					"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
@@ -350,7 +351,7 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)\n$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+					"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
