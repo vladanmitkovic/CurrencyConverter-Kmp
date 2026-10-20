@@ -19,8 +19,8 @@ import me.mitkovic.kmp.currencyconverter.common.Constants
 import me.mitkovic.kmp.currencyconverter.common.Constants.SOMETHING_WENT_WRONG
 import me.mitkovic.kmp.currencyconverter.data.model.Resource
 import me.mitkovic.kmp.currencyconverter.data.repository.ICurrencyConverterRepository
+import me.mitkovic.kmp.currencyconverter.domain.utils.CurrencyConversionUtil
 import me.mitkovic.kmp.currencyconverter.logging.IAppLogger
-import me.mitkovic.kmp.currencyconverter.ui.utils.CurrencyConversionUtil
 
 sealed interface ConversionRatesUiState {
     object Loading : ConversionRatesUiState
