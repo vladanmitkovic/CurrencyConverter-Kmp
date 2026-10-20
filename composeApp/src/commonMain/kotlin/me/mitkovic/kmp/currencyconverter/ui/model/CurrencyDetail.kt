@@ -1,4 +1,4 @@
-package me.mitkovic.kmp.currencyconverter.data.model
+package me.mitkovic.kmp.currencyconverter.ui.model
 
 import org.jetbrains.compose.resources.DrawableResource
 
