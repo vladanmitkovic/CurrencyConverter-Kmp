@@ -80,6 +80,81 @@ The UI Layer consists of UI elements like buttons, menus, tabs that could intera
 <br/><br/>
 The data Layer consists of repositories, which include business logic, such as querying data from the local database and requesting remote data from the network. It is implemented as an offline-first source of business logic and follows the [single source of truth](https://en.wikipedia.org/wiki/Single_source_of_truth) principle.
 
+## Development
+
+### Project structure
+
+- `composeApp`: shared UI and business logic, platform implementations, Room schemas and Koin/Room code generation.
+- `androidApp`: Android Activity, Application, manifest and APK configuration.
+- `desktopApp`: desktop launcher and native distribution configuration.
+- `iosApp`: Xcode application consuming the `ComposeApp` framework.
+
+The `jvm("desktop")` target and `desktopMain` implementations remain in `composeApp`.
+Keep `iosX64()` and its KSP dependencies for iOS Simulator development on Intel Macs.
+The Lifecycle version remains pinned until any replacement is verified to publish compatible `iosX64` artifacts.
+
+### Android
+
+Run the `androidApp` configuration in Android Studio. To build its debug APK:
+
+```sh
+./gradlew :androidApp:assembleDebug
+```
+
+### Desktop
+
+Run the desktop application:
+
+```sh
+./gradlew :desktopApp:run
+```
+
+Compile and build the desktop JAR:
+
+```sh
+./gradlew :desktopApp:jar
+```
+
+Create an application directory with a bundled runtime, or a macOS installer:
+
+```sh
+./gradlew :desktopApp:createDistributable
+./gradlew :desktopApp:packageDmg
+```
+
+Desktop outputs are under `desktopApp/build/`. Native installers are built on the corresponding operating system.
+
+### iOS
+
+The Xcode build phase invokes `:composeApp:embedAndSignAppleFrameworkForXcode`.
+Use the existing `iosApp` Xcode project to build and run on the selected device or simulator.
+For a standalone debug framework, choose the task matching the destination:
+
+```sh
+# iOS Simulator on an Intel Mac
+./gradlew :composeApp:linkDebugFrameworkIosX64
+
+# iOS Simulator on an Apple Silicon Mac
+./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64
+
+# Physical iPhone or iPad
+./gradlew :composeApp:linkDebugFrameworkIosArm64
+```
+
+Native compilation caching uses Kotlin's defaults. When validating a toolchain update, build and run the Intel simulator app, then rebuild after a small Kotlin change to check incremental builds with caching enabled.
+
+### Generated code and manual checks
+
+Normal builds run Koin and Room code generation. If generated Koin imports are missing, rerun metadata generation:
+
+```sh
+./gradlew :composeApp:kspCommonMainKotlinMetadata --rerun-tasks
+```
+
+Then build the affected platform. A routine rebuild does not require `clean`.
+
+Before merging, check currency conversion, navigation, favorites and theme persistence, and offline behavior on Android, desktop and the Intel iOS Simulator. Also launch the packaged desktop application to verify its bundled runtime, resources and database support.
+
 ### License
 Designed and developed by Vladan Mitkovic (2024)
 
