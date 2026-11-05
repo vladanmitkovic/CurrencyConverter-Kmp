@@ -1,4 +1,4 @@
-package me.mitkovic.kmp.currencyconverter.ui.utils
+package me.mitkovic.kmp.currencyconverter.domain.utils
 
 object CurrencyConversionUtil {
 

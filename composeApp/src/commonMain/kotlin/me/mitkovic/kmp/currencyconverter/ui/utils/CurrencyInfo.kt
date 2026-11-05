@@ -24,7 +24,7 @@ import currencyconverter_kmp.composeapp.generated.resources.sgd
 import currencyconverter_kmp.composeapp.generated.resources.tru
 import currencyconverter_kmp.composeapp.generated.resources.usd
 import currencyconverter_kmp.composeapp.generated.resources.zar
-import me.mitkovic.kmp.currencyconverter.data.model.CurrencyDetail
+import me.mitkovic.kmp.currencyconverter.ui.model.CurrencyDetail
 
 object CurrencyInfo {
 
